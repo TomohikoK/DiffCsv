@@ -51,9 +51,10 @@ public class DiffCsv {
 		long startTime = (new Date()).getTime();
 //		String[] testParam = { //
 //				"-e", "/Volumes/GoogleDrive/マイドライブ/九電託送/Phase3/現新比較/BTS-E001/OUT", //
-//				"-r", "/Volumes/GoogleDrive/マイドライブ/九電託送/Phase3/現新比較/BTS-E001/comp_test/btse001dp/result/btsc_yuko_kwh_l_ext", //
+//				"-r",
+//				"/Volumes/GoogleDrive/マイドライブ/九電託送/Phase3/現新比較/BTS-E001/comp_test/btse001dp/result/bts_yuko_kwh_l_ext", //
 //				"-b", "btse001dp", //
-//				"-d", "BTSC_YUKO_KWH_L_EXT", //
+//				"-d", "BTS_YUKO_KWH_L_EXT", //
 //				"-targetCol", "110", //
 //				"-targetValue", "BTS-E001", //
 //				"-l", "false", //
@@ -172,7 +173,7 @@ public class DiffCsv {
 				if (expKey.equalsIgnoreCase(getKeyStr(res))) {
 					found = true;
 					if (compareData(exp, res)) {
-//						System.out.println("match\t" + String.join(DELIMITTER, exp));
+						System.out.println("match\t" + String.join(DELIMITTER, res));
 						matchCount++;
 					} else {
 						unMatchCount++;
@@ -183,7 +184,7 @@ public class DiffCsv {
 			if (!found) {
 				notFoundResCount++;
 				if (showDetail)
-					System.out.println("not found res only exp\t" + String.join(DELIMITTER, exp));
+					System.out.println("not found in res only exp\t" + String.join(DELIMITTER, exp));
 			}
 		}
 	}
@@ -210,7 +211,7 @@ public class DiffCsv {
 			if (!found) {
 				notFoundExpCount++;
 				if (showDetail)
-					System.out.println("not found exp only res\t" + String.join(DELIMITTER, res));
+					System.out.println("not found in exp only res\t" + String.join(DELIMITTER, res));
 			}
 		}
 	}
@@ -224,7 +225,7 @@ public class DiffCsv {
 	private boolean compareData(String[] exp, String[] res) {
 		boolean match = true;
 		Set<Integer> unmatchCol = new HashSet<Integer>();
-		List<Integer> targetCols = dataAttrMap.get(data).targetCols;
+		List<Integer> targetCols = dataAttrMap.get(data).excludeCols;
 		for (int i = 0; i < exp.length; i++) {
 			if (!targetCols.contains(i)) {
 				if (exp[i].equalsIgnoreCase(res[i])) {
@@ -259,16 +260,20 @@ public class DiffCsv {
 		}
 		if (!match) {
 			if (showDetail) {
-//				System.out.println("not match exp\t" + String.join(DELIMITTER, exp));
-//				System.out.println("not match res\t" + String.join(DELIMITTER, res));
-				System.out.println("not match exp\t" + getDifString(exp, unmatchCol));
-				System.out.println("not match res\t" + getDifString(res, unmatchCol));
-				System.out.println();
+				System.out.println("unnmatch exp\t" + getDifString(exp, unmatchCol));
+				System.out.println("unmatch res\t" + getDifString(res, unmatchCol));
 			}
 		}
 		return match;
 	}
 
+	/**
+	 * 差異のある項目を[]で括って１レコードの全項目を文字列化。
+	 * 
+	 * @param dats
+	 * @param unmatchCol
+	 * @return
+	 */
 	private String getDifString(String[] dats, Set<Integer> unmatchCol) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < dats.length; i++) {
@@ -286,6 +291,12 @@ public class DiffCsv {
 		return sb.toString();
 	}
 
+	/**
+	 * キー項目を１つの文字列に連結。
+	 * 
+	 * @param dat
+	 * @return
+	 */
 	private String getKeyStr(String[] dat) {
 		StringBuffer key = new StringBuffer();
 		int[] keiCols = dataAttrMap.get(data).keyCols;
@@ -372,53 +383,62 @@ public class DiffCsv {
 
 	public DiffCsv() {
 		dataAttrMap = new HashMap<String, DataAttr>();
+		// BTS_YUKO_KWH_L_EXT
+		this.initializeBtscYukoKwhLExt();
+		// BTS_YUKO_KWH_L_EXT
+		this.initializeBtsYukoKwhLExt();
+	}
 
-//		btse001dpで使うBTSC_YUKO_KWH_L_EXT
+	/**
+	 * BTSC_YUKO_KWH_L_EXT
+	 */
+	private void initializeBtscYukoKwhLExt() {
+		/** BTSC_YUKO_KWH_L_EXT */
 		int[] key1 = { 0, 1, 2, 3, 4 };
+		Set<Integer> floatSet1 = new HashSet<Integer>();
+		for (int i = 8; i < 57; i++) {
+			floatSet1.add(i);
+		}
 		Integer[] exclude1 = { 109, 110, 111 };
-		dataAttrMap.put("BTSC_YUKO_KWH_L_EXT", new DataAttr(key1, 8, 56, 110, "BTS-E001", exclude1));
-//		int[] key1 = { 0,1,2,3,4 };
-//		Integer[] exclude1 = {  };
-//		dataAttrMap.put("BTSC_YUKO_KWH_L_EXT", new DataAttr(key1,8,56,0,null,exclude1));
+		dataAttrMap.put("BTSC_YUKO_KWH_L_EXT", new DataAttr(key1, floatSet1, 110, "BTS-E001", exclude1));
+	}
 
-//		btsh002dpで使うBTSC_YUKO_KWH_L_EXT
-		int[] key2 = { 1, 2, 3, 4 };
-		Integer[] exclude2 = { 100 };
-		dataAttrMap.put("BTS_YUKO_KWH_L_EXT", new DataAttr(key2, 4, 51, 110, null, exclude2));
+	/**
+	 * BTS_YUKO_KWH_L_EXT
+	 */
+	private void initializeBtsYukoKwhLExt() {
+		int[] key2 = { 1, 2, 3 };
+		Set<Integer> floatSet2 = new HashSet<Integer>();
+		for (int i = 4; i < 52; i++) {
+			floatSet2.add(i);
+		}
+		Integer[] exclude2 = { 0, 100 };
+		dataAttrMap.put("BTS_YUKO_KWH_L_EXT", new DataAttr(key2, floatSet2, 110, null, exclude2));
 	}
 
 	public class DataAttr {
 		// data属性
-		// キー項目数。先頭から連続。
+		/** キーカラム。 */
 		int[] keyCols;
-		HashSet<Integer> floatCheckSet;
-		// float比較開始カラム
-		int floatCheckStartCol;
-		// float比較終了カラム
-		int floatCheckEndCol;
-		// チェックしない最終カラムNo
-		List<Integer> targetCols;
+		/** float比較カラムNo */
+		Set<Integer> floatCheckSet;
+		/** チェック除外カラムNo。更新日、ファイルパスなど。 */
+		List<Integer> excludeCols;
 
 		/**
+		 * データ属性コンストラクタ。
 		 * 
-		 * @param keyColNum          キー項目カラムColNoリスト。
-		 * @param floatCheckStartCol float比較開始カラムNo
-		 * @param floatCheckEndCol   float比較終了カラムNo
-		 * @param targetCols         比較除外カラム。最後から連続。
+		 * @param keyCols       キー項目カラム。
+		 * @param floatSet      数値比較カラム。
+		 * @param targetCol     対象抽出カラム１つのみ。
+		 * @param targetUpdater 対象抽出項目１つのみ。
+		 * @param excludeCols   比較除外カラム。
 		 */
-		public DataAttr(int[] keyCols, int floatCheckStartCol, int floatCheckEndCol, int updaterCol,
-				String targetUpdater, Integer[] targetCols) {
-			floatCheckSet = new HashSet<Integer>();
-			this.floatCheckStartCol = floatCheckStartCol;
-			// float比較終了カラム
-			this.floatCheckEndCol = floatCheckEndCol;
-			for (int i = this.floatCheckStartCol; i < this.floatCheckEndCol; i++) {
-				floatCheckSet.add(i);
-			}
-			// キー項目ColNo
+		public DataAttr(int[] keyCols, Set<Integer> floatCheckSet, int targetCol, String targetUpdater,
+				Integer[] excludeCols) {
 			this.keyCols = keyCols;
-			// チェックしない最終カラムの数
-			this.targetCols = Arrays.asList(targetCols);
+			this.floatCheckSet = floatCheckSet;
+			this.excludeCols = Arrays.asList(excludeCols);
 		}
 	}
 }
