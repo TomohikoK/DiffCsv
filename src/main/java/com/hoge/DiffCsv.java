@@ -61,12 +61,12 @@ public class DiffCsv {
 //		};
 //		args = testParam;
 //		String[] testParam = { //
-//				"-e", "/Users/nakazawasugio/qd-bts/ee/btsh002dp/OUT", //
-//				"-r", "/Users/nakazawasugio/qd-bts/ee/btsh002dp/btsh002dp/result/btsc_yuko_kwh_l_ext", //
-//				"-b", "btsh002dp", //
+//				"-e", "/Users/nakazawasugio/qd-bts/ee/btse001dp/OUT", //
+//				"-r", "/Users/nakazawasugio/qd-bts/ee/btse001dp/btse001dp/result/btsc_yuko_kwh_l_ext",
+//				"-b", "btse001dp", //
 //				"-d", "BTSC_YUKO_KWH_L_EXT", //
-//				"-targetCol", "4", //
-//				"-targetValue", "2018-08-30", //
+//				"-targetCol", "110", //
+//				"-targetValue", "BTS-E001", //
 //				"-l", "false", //
 //		};
 //		args = testParam;
@@ -100,22 +100,23 @@ public class DiffCsv {
 			System.out.println(String.join(",", args));
 			CommandLine commandLine = parser.parse(options, args);
 
-			DiffCsv diffCsv = new DiffCsv();
-			diffCsv.expect = (String) commandLine.getParsedOptionValue("expect");
-			diffCsv.result = (String) commandLine.getParsedOptionValue("result");
-			diffCsv.batch = (String) commandLine.getParsedOptionValue("batch");
-			diffCsv.data = (String) commandLine.getParsedOptionValue("data");
-			diffCsv.excludeTargetCol = commandLine.hasOption("targetCol")
+			String expect = (String) commandLine.getParsedOptionValue("expect");
+			String result = (String) commandLine.getParsedOptionValue("result");
+			String batch = (String) commandLine.getParsedOptionValue("batch");
+			String data = (String) commandLine.getParsedOptionValue("data");
+			int excludeTargetCol = commandLine.hasOption("targetCol")
 					? Integer.parseInt((String) commandLine.getParsedOptionValue("targetCol"))
 					: -1;
-			diffCsv.excludeTargetValue = commandLine.hasOption("targetValue")
+			String excludeTargetValue = commandLine.hasOption("targetValue")
 					? (String) commandLine.getParsedOptionValue("targetValue")
 					: null;
-			diffCsv.showDetail = commandLine.hasOption("log")
+			boolean showDetail = commandLine.hasOption("log")
 					? Boolean.parseBoolean((String) commandLine.getParsedOptionValue("log"))
 					: true;
 //			diffCsv.showDetail = Boolean.parseBoolean((String) commandLine.getOptionValue("log", "true"));
 
+			DiffCsv diffCsv = new DiffCsv(expect, result, batch, data, excludeTargetCol, excludeTargetValue,
+					showDetail);
 			diffCsv.exec();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -151,9 +152,9 @@ public class DiffCsv {
 		compareExpToResList(expList, resList);
 		compareResToExpList(resList, expList);
 		logger.info("match  " + matchCount);
+		logger.info("unmatch  " + unMatchCount);
 		logger.info("notFoundRes " + notFoundResCount);
 		logger.info("notFoundExp " + notFoundExpCount);
-		logger.info("unmatch  " + unMatchCount);
 	}
 
 	/**
@@ -164,7 +165,6 @@ public class DiffCsv {
 	 */
 	private void compareExpToResList(List<String[]> expList, List<String[]> resList) {
 		// expList -> resList
-		int errorCounter = 1;
 		for (String[] exp : expList) {
 			boolean found = false;
 			String expKey = getKeyStr(exp);
@@ -173,7 +173,8 @@ public class DiffCsv {
 				if (expKey.equalsIgnoreCase(getKeyStr(res))) {
 					found = true;
 					if (compareData(exp, res)) {
-						System.out.println("match\t" + String.join(DELIMITTER, res));
+						if (showDetail)
+							System.out.println("match\t" + String.join(DELIMITTER, exp));
 						matchCount++;
 					} else {
 						unMatchCount++;
@@ -197,7 +198,6 @@ public class DiffCsv {
 	 */
 	private void compareResToExpList(List<String[]> resList, List<String[]> expList) {
 		// expList -> resList
-		int errorCounter = 1;
 		for (String[] res : resList) {
 			boolean found = false;
 			String resKey = getKeyStr(res);
@@ -260,7 +260,7 @@ public class DiffCsv {
 		}
 		if (!match) {
 			if (showDetail) {
-				System.out.println("unnmatch exp\t" + getDifString(exp, unmatchCol));
+				System.out.println("unmatch exp\t" + getDifString(exp, unmatchCol));
 				System.out.println("unmatch res\t" + getDifString(res, unmatchCol));
 			}
 		}
@@ -367,26 +367,48 @@ public class DiffCsv {
 		InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
 		CSVReader reader = new CSVReader(isr);
 		String[] nextLine;
-		int counter = 0;
 		while ((nextLine = reader.readNext()) != null) {
-			// target updater is BTS-E001
-//			if ("BTS-E001".equalsIgnoreCase(nextLine[110])) {
 			expList.add(nextLine);
-//			}
-//			if (counter++ < 10) {
-//				logger.debug(nextLine[110]);
-//			}
 		}
+		reader.close();
 		logger.debug(fileName + " read exp list " + expList.size() + " lines.");
 		return expList;
 	}
 
 	public DiffCsv() {
 		dataAttrMap = new HashMap<String, DataAttr>();
-		// BTS_YUKO_KWH_L_EXT
-		this.initializeBtscYukoKwhLExt();
-		// BTS_YUKO_KWH_L_EXT
-		this.initializeBtsYukoKwhLExt();
+
+		initializeBtscYukoKwhLExt();
+		initializeBtsYukoKwhLExt();
+		initializeIf0511();
+	}
+
+	public DiffCsv(String expect, String result, String batch, String data, int excludeTargetCol,
+			String excludeTargetValue, boolean showDetail) {
+		this();
+		this.expect = expect;
+		this.result = result;
+		this.batch = batch;
+		this.data = data;
+		this.excludeTargetCol = excludeTargetCol;
+		this.excludeTargetValue = excludeTargetValue;
+		this.showDetail = showDetail;
+	}
+
+	public int getUnMatchCount() {
+		return unMatchCount;
+	}
+
+	public int getNotFoundResCount() {
+		return notFoundResCount;
+	}
+
+	public int getMatchCount() {
+		return matchCount;
+	}
+
+	public int getNotFoundExpCount() {
+		return notFoundExpCount;
 	}
 
 	/**
@@ -400,7 +422,7 @@ public class DiffCsv {
 			floatSet1.add(i);
 		}
 		Integer[] exclude1 = { 109, 110, 111 };
-		dataAttrMap.put("BTSC_YUKO_KWH_L_EXT", new DataAttr(key1, floatSet1, 110, "BTS-E001", exclude1));
+		dataAttrMap.put("BTSC_YUKO_KWH_L_EXT", new DataAttr(key1, floatSet1, exclude1));
 	}
 
 	/**
@@ -413,7 +435,20 @@ public class DiffCsv {
 			floatSet2.add(i);
 		}
 		Integer[] exclude2 = { 0, 100 };
-		dataAttrMap.put("BTS_YUKO_KWH_L_EXT", new DataAttr(key2, floatSet2, 110, null, exclude2));
+		dataAttrMap.put("BTS_YUKO_KWH_L_EXT", new DataAttr(key2, floatSet2, exclude2));
+	}
+
+	/**
+	 * IF0511
+	 */
+	private void initializeIf0511() {
+		int[] key = { 0, 1, 2 };
+		Set<Integer> floatSet = new HashSet<Integer>();
+		for (int i = 5; i < 5 + 47; i++) {
+			floatSet.add(i);
+		}
+		Integer[] exclude = {};
+		dataAttrMap.put("IF0511", new DataAttr(key, floatSet, exclude));
 	}
 
 	public class DataAttr {
@@ -434,8 +469,7 @@ public class DiffCsv {
 		 * @param targetUpdater 対象抽出項目１つのみ。
 		 * @param excludeCols   比較除外カラム。
 		 */
-		public DataAttr(int[] keyCols, Set<Integer> floatCheckSet, int targetCol, String targetUpdater,
-				Integer[] excludeCols) {
+		public DataAttr(int[] keyCols, Set<Integer> floatCheckSet, Integer[] excludeCols) {
 			this.keyCols = keyCols;
 			this.floatCheckSet = floatCheckSet;
 			this.excludeCols = Arrays.asList(excludeCols);
