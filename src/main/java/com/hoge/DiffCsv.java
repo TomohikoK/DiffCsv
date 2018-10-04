@@ -130,6 +130,9 @@ public class DiffCsv {
 	}
 
 	public void exec() throws IOException {
+		logger.info("expect file = " + this.expect + "/" + this.data + ".csv");
+		logger.info("result path = "+this.result + " /*.csv");
+		logger.info("data name   = " + this.data);
 		// 期待するデータ入力
 		List<String[]> expList = readCsvToList(this.expect + "/" + this.data + ".csv");
 		// 指定した更新者以外を削除
@@ -142,15 +145,16 @@ public class DiffCsv {
 			}
 		}
 //		expList.stream().forEach(s->System.out.println(String.join(",",s)));
-		logger.debug("exp liens = " + expList.size());
 
 		// 出力結果データ
 		List<String[]> resList = generateResultData();
 //		resList.stream().forEach(s->System.out.println(String.join(",",s)));
-		logger.debug("res lines = " + resList.size());
 
 		compareExpToResList(expList, resList);
 		compareResToExpList(resList, expList);
+
+		logger.info("exp liens = " + expList.size());
+		logger.info("res lines = " + resList.size());
 		logger.info("match  " + matchCount);
 		logger.info("unmatch  " + unMatchCount);
 		logger.info("notFoundRes " + notFoundResCount);
@@ -315,13 +319,12 @@ public class DiffCsv {
 	private List<String[]> generateResultData() throws IOException {
 		ArrayList<String[]> resList = new ArrayList<String[]>();
 
-		List<File> resFiles = getNestedFileList(this.result, this.data);
+		List<File> resFiles = getNestedFileList(this.result);
 		for (File file : resFiles) {
 			if (file.getName().endsWith(".csv")) {
 				resList.addAll(readCsvToList(file.getAbsolutePath()));
 			}
 		}
-		logger.debug(String.valueOf(resList.size()));
 		return resList;
 	}
 
@@ -329,17 +332,12 @@ public class DiffCsv {
 	 * 指定したパス＋データ以下のサブディレクトリから再帰的にファイルを取得。
 	 * 
 	 * @param path
-	 * @param data
 	 * @return
 	 */
-	private List<File> getNestedFileList(String path, String data) {
-
+	private List<File> getNestedFileList(String path) {
 		List<File> files = new ArrayList<>();
-
 		Stack<File> stack = new Stack<>();
-//		stack.add(new File(path + "/" + data));
 		stack.add(new File(path));
-		// nakazawa
 		while (!stack.isEmpty()) {
 			File item = stack.pop();
 			if (item.isFile())
@@ -355,24 +353,30 @@ public class DiffCsv {
 	/**
 	 * generate record list for expect data from csv.
 	 * <p>
-	 * file exclude updater is not BTS-E001.
 	 * 
-	 * @return record list(updater is BTS-E001)
+	 * @return record list
 	 * @throws IOException expect file
 	 */
 	private List<String[]> readCsvToList(String fileName) throws IOException {
 //		String fileName = this.expect + "/" + this.data + ".csv";
-		ArrayList<String[]> expList = new ArrayList<String[]>();
+		ArrayList<String[]> retList = new ArrayList<String[]>();
 		FileInputStream fis = new FileInputStream(fileName);
 		InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
 		CSVReader reader = new CSVReader(isr);
 		String[] nextLine;
 		while ((nextLine = reader.readNext()) != null) {
-			expList.add(nextLine);
+			// スラッシュ日付をハイフン日付に変換
+			for (int i = 0; i < nextLine.length; i++) {
+				if (nextLine[i].matches("[0-9]{4}/[0-9]{2}/[0-9]{2}")) {
+					nextLine[i] = nextLine[i].replaceAll("([0-9]{4})/([0-9]{2})/([0-9]{2})", "$1-$2-$3");
+				}
+			}
+			// 読み込んだCSVレコードを戻り値リストへ追加。
+			retList.add(nextLine);
 		}
 		reader.close();
-		logger.debug(fileName + " read exp list " + expList.size() + " lines.");
-		return expList;
+		logger.info(fileName + " read list " + retList.size() + " lines.");
+		return retList;
 	}
 
 	public DiffCsv() {

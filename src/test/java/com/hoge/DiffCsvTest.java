@@ -108,4 +108,21 @@ public class DiffCsvTest {
 		Assert.assertEquals(0, target.getNotFoundResCount());
 		Assert.assertEquals(0, target.getNotFoundExpCount());
 	}
+	@Test
+	public void testIf0506() throws IOException {
+		DiffCsv target = new DiffCsv( //
+				"/Users/nakazawasugio/tmp/if0506/OUT", // -e
+				"/Users/nakazawasugio/tmp/if0506/btscustom/result/btsc_yuko_kwh_l_ext", // -r
+				"if0506dp", // -b
+				"BTSC_YUKO_KWH_L_EXT", // -d
+				110, // -targetCol
+				null, // -targetValue
+				true// -l
+		);
+		target.exec();
+		Assert.assertEquals(0, target.getMatchCount());
+		Assert.assertEquals(2, target.getUnMatchCount());
+		Assert.assertEquals(4, target.getNotFoundResCount());
+		Assert.assertEquals(1, target.getNotFoundExpCount());
+	}
 }
