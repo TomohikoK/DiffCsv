@@ -111,8 +111,8 @@ public class DiffCsvTest {
 	@Test
 	public void testIf0506() throws IOException {
 		DiffCsv target = new DiffCsv( //
-				"/Users/nakazawasugio/tmp/if0506/OUT", // -e
-				"/Users/nakazawasugio/tmp/if0506/btscustom/result/btsc_yuko_kwh_l_ext", // -r
+				"src/test/resources/com/hoge/if0506/exp", // -e
+				"src/test/resources/com/hoge/if0506/res/btsc_yuko_kwh_l_ext", // -r
 				"if0506dp", // -b
 				"BTSC_YUKO_KWH_L_EXT", // -d
 				110, // -targetCol

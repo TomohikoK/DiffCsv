@@ -2,6 +2,7 @@ package com.hoge;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -133,19 +134,32 @@ public class DiffCsv {
 		logger.info("expect file = " + this.expect + "/" + this.data + ".csv");
 		logger.info("result path = "+this.result + " /*.csv");
 		logger.info("data name   = " + this.data);
-		// 期待するデータ入力
-		List<String[]> expList = readCsvToList(this.expect + "/" + this.data + ".csv");
-		// 指定した更新者以外を削除
-		if (this.excludeTargetValue != null) {
-			Iterator<String[]> it = expList.iterator();
-			while (it.hasNext()) {
-				if (!this.excludeTargetValue.equalsIgnoreCase(it.next()[this.excludeTargetCol])) {
-					it.remove();
+		// 期待するデータ
+		File expDir = new File(this.expect);
+		FilenameFilter filter = new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				if(name.startsWith(data) && name.endsWith(".csv")) {
+					return true;
+				}
+				return false;
+			}
+		};
+		String[] expFileList = expDir.list(filter);
+		List<String[]> expList = new ArrayList<String[]>();
+		for(String fileName:expFileList) {
+			List<String[]> tmpList = readCsvToList(this.expect + "/" + fileName);
+			// 指定した更新者以外を削除
+			if (this.excludeTargetValue != null) {
+				Iterator<String[]> it = tmpList.iterator();
+				while (it.hasNext()) {
+					if (!this.excludeTargetValue.equalsIgnoreCase(it.next()[this.excludeTargetCol])) {
+						it.remove();
+					}
 				}
 			}
+			expList.addAll(tmpList);
 		}
-//		expList.stream().forEach(s->System.out.println(String.join(",",s)));
-
 		// 出力結果データ
 		List<String[]> resList = generateResultData();
 //		resList.stream().forEach(s->System.out.println(String.join(",",s)));
