@@ -132,14 +132,14 @@ public class DiffCsv {
 
 	public void exec() throws IOException {
 		logger.info("expect file = " + this.expect + "/" + this.data + ".csv");
-		logger.info("result path = "+this.result + " /*.csv");
+		logger.info("result path = " + this.result + " /*.csv");
 		logger.info("data name   = " + this.data);
 		// 期待するデータ
 		File expDir = new File(this.expect);
 		FilenameFilter filter = new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
-				if(name.startsWith(data) && name.endsWith(".csv")) {
+				if (name.startsWith(data) && name.endsWith(".csv")) {
 					return true;
 				}
 				return false;
@@ -147,7 +147,7 @@ public class DiffCsv {
 		};
 		String[] expFileList = expDir.list(filter);
 		List<String[]> expList = new ArrayList<String[]>();
-		for(String fileName:expFileList) {
+		for (String fileName : expFileList) {
 			List<String[]> tmpList = readCsvToList(this.expect + "/" + fileName);
 			// 指定した更新者以外を削除
 			if (this.excludeTargetValue != null) {
@@ -399,6 +399,9 @@ public class DiffCsv {
 		initializeBtscYukoKwhLExt();
 		initializeBtsYukoKwhLExt();
 		initializeIf0511();
+		initializeBtscBeforeCalcChkL();
+		initializeBtscBeforeCalcChkLDetail();
+		initializeBtscCalcChkCnt();
 	}
 
 	public DiffCsv(String expect, String result, String batch, String data, int excludeTargetCol,
@@ -467,6 +470,44 @@ public class DiffCsv {
 		}
 		Integer[] exclude = {};
 		dataAttrMap.put("IF0511", new DataAttr(key, floatSet, exclude));
+	}
+
+	/**
+	 * BTSC_BEFORE_CALC_CHK_L
+	 */
+	private void initializeBtscBeforeCalcChkL() {
+		int[] key = { 0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13 };
+		Set<Integer> floatSet = new HashSet<Integer>();
+		floatSet.add(15);
+		Integer[] exclude = { 21, 22 };
+		dataAttrMap.put("BTSC_BEFORE_CALC_CHK_L", new DataAttr(key, floatSet, exclude));
+	}
+
+	/**
+	 * BTSC_BEFORE_CALC_CHK_L_DETAIL
+	 */
+	private void initializeBtscBeforeCalcChkLDetail() {
+		int[] key = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+		Set<Integer> floatSet = new HashSet<Integer>();
+		// numberなし
+		Integer[] exclude = { 21, 22 };
+		dataAttrMap.put("BTSC_BEFORE_CALC_CHK_L_DETAIL", new DataAttr(key, floatSet, exclude));
+	}
+
+	/**
+	 * BTSC_CALC_CHK_CNT
+	 */
+	private void initializeBtscCalcChkCnt() {
+		int[] key = { 0, 1, 2, 3, 4 };
+		Set<Integer> floatSet = new HashSet<Integer>();
+		for (int i = 5; i < 10; i++) {
+			floatSet.add(i);
+		}
+		for (int i = 11; i < 17; i++) {
+			floatSet.add(i);
+		}
+		Integer[] exclude = { 10 };
+		dataAttrMap.put("BTSC_CALC_CHK_CNT", new DataAttr(key, floatSet, exclude));
 	}
 
 	public class DataAttr {
