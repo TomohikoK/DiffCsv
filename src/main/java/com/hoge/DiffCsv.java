@@ -465,7 +465,7 @@ public class DiffCsv {
 	private void initializeIf0511() {
 		int[] key = { 0, 1, 2 };
 		Set<Integer> floatSet = new HashSet<Integer>();
-		for (int i = 5; i < 5 + 47; i++) {
+		for (int i = 5; i < 5 + 96; i += 2) {
 			floatSet.add(i);
 		}
 		Integer[] exclude = {};
