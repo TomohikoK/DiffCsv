@@ -7,3 +7,10 @@
 * -targetCol  期待するデータの抽出条件カラムNo。期待するデータに余分なものが入っている場合に特定項目の一致条件にて対象から外すことが可能。（非推奨）
 * -targetValue  期待するデータの抽出条件のカラムの値。（非推奨）
 * -l  比較結果明細出力可否。デフォルトは　true
+## 対応データ
+* BTS_YUKO_KWH_L_EXT
+* BTSC_BEFORE_CALC_CHK_L
+* BTSC_BEFORE_CALC_CHK_L_DETAIL
+* BTSC_CALC_CHK_CNT
+* BTSC_YUKO_KWH_L_EXT
+* IF0511
