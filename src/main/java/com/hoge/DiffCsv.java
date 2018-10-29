@@ -139,7 +139,9 @@ public class DiffCsv {
 		FilenameFilter filter = new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
-				if (name.startsWith(data) && name.endsWith(".csv")) {
+				String fileName = data + ".csv";
+				if((fileName.equalsIgnoreCase(name))) {
+//				if (name.startsWith(data) && name.endsWith(".csv")) {
 					return true;
 				}
 				return false;

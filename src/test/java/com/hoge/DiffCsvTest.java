@@ -108,8 +108,8 @@ public class DiffCsvTest {
 				true// -l
 		);
 		target.exec();
-		Assert.assertEquals(0, target.getMatchCount());
-		Assert.assertEquals(17, target.getUnMatchCount());
+		Assert.assertEquals(17, target.getMatchCount());
+		Assert.assertEquals(0, target.getUnMatchCount());
 		Assert.assertEquals(0, target.getNotFoundResCount());
 		Assert.assertEquals(2, target.getNotFoundExpCount());
 	}
