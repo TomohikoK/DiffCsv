@@ -404,6 +404,8 @@ public class DiffCsv {
 		initializeBtscBeforeCalcChkL();
 		initializeBtscBeforeCalcChkLDetail();
 		initializeBtscCalcChkCnt();
+		initializeBtscBpExtStatus();
+		initializeBtsKKakuteiJLExt();
 	}
 
 	public DiffCsv(String expect, String result, String batch, String data, int excludeTargetCol,
@@ -510,6 +512,29 @@ public class DiffCsv {
 		}
 		Integer[] exclude = { 10 };
 		dataAttrMap.put("BTSC_CALC_CHK_CNT", new DataAttr(key, floatSet, exclude));
+	}
+
+	/**
+	 * BTSC_BP_EXT_STATUS
+	 */
+	private void initializeBtscBpExtStatus() {
+		int[] key = { 0, 1, 2, 3, 4 };
+		Set<Integer> floatSet = new HashSet<Integer>();
+		Integer[] exclude = { 5,6,7,8 };
+		dataAttrMap.put("BTSC_BP_EXT_STATUS", new DataAttr(key, floatSet, exclude));
+	}
+
+	/**
+	 * BTS_K_KAKUTEI_J_L_EXT
+	 */
+	private void initializeBtsKKakuteiJLExt() {
+		int[] key = { 1, 3, 4 };
+		Set<Integer> floatSet = new HashSet<Integer>();
+		for (int i = 5; i < 27; i++) {
+			floatSet.add(i);
+		}
+		Integer[] exclude = { 28 };
+		dataAttrMap.put("BTS_K_KAKUTEI_J_L_EXT", new DataAttr(key, floatSet, exclude));
 	}
 
 	public class DataAttr {
