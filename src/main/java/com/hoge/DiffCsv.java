@@ -169,7 +169,7 @@ public class DiffCsv {
 		compareExpToResList(expList, resList);
 		compareResToExpList(resList, expList);
 
-		logger.info("exp liens = " + expList.size());
+		logger.info("exp lines = " + expList.size());
 		logger.info("res lines = " + resList.size());
 		logger.info("match  " + matchCount);
 		logger.info("unmatch  " + unMatchCount);
