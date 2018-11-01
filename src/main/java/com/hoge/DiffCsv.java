@@ -6,6 +6,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -30,8 +31,10 @@ import com.opencsv.CSVReader;
 
 public class DiffCsv {
 
-	static Logger logger = LoggerFactory.getLogger(DiffCsv.class);
-	static String DELIMITTER = "\t";
+	static private Logger logger = LoggerFactory.getLogger(DiffCsv.class);
+	static private String DELIMITTER = "\t";
+	static private SimpleDateFormat SDF10 = new SimpleDateFormat("yyyy-MM-dd");
+	static private SimpleDateFormat SDF19 = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
 	private boolean showDetail;
 	private String expect;
 	private String result;
@@ -140,7 +143,7 @@ public class DiffCsv {
 			@Override
 			public boolean accept(File dir, String name) {
 				String fileName = data + ".csv";
-				if((fileName.equalsIgnoreCase(name))) {
+				if ((fileName.equalsIgnoreCase(name))) {
 //				if (name.startsWith(data) && name.endsWith(".csv")) {
 					return true;
 				}
@@ -179,7 +182,7 @@ public class DiffCsv {
 
 	/**
 	 * リストの比較。期待値ー＞結果
-	 * 
+	 *
 	 * @param expList
 	 * @param resList
 	 */
@@ -212,7 +215,7 @@ public class DiffCsv {
 
 	/**
 	 * リストの比較。結果ー＞期待値
-	 * 
+	 *
 	 * @param resList
 	 * @param expList
 	 */
@@ -238,7 +241,7 @@ public class DiffCsv {
 
 	/**
 	 * レコード同士の比較
-	 * 
+	 *
 	 * @param exp
 	 * @param res
 	 */
@@ -252,21 +255,14 @@ public class DiffCsv {
 					// OK
 				} else {
 					if (dataAttrMap.get(data).floatCheckSet.contains(i)) {
-						float expf = 0f;
-						float resf = 0f;
-						try {
-							expf = Float.parseFloat(exp[i]);
-						} catch (NumberFormatException nfe) {
-							// default 0
+						if (!compareFloat(exp[i], res[i])) {
+							// not same
+							match = false;
+							unmatchCol.add(i);
 						}
-						try {
-							resf = Float.parseFloat(res[i]);
-						} catch (NumberFormatException nfe) {
-							// default 0
-						}
-						if (expf == resf) {
-							// OK
-						} else {
+					} else if (dataAttrMap.get(data).dateCheckSet.contains(i)) {
+						if (!compareDate(exp[i], res[i])) {
+							// not same
 							match = false;
 							unmatchCol.add(i);
 						}
@@ -287,9 +283,59 @@ public class DiffCsv {
 		return match;
 	}
 
+	private boolean compareFloat(String exp, String res) {
+		if (parseFloat(exp) == parseFloat(res)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private float parseFloat(String dat) {
+		try {
+			return Float.parseFloat(dat);
+		} catch (NumberFormatException nfe) {
+			return 0f;
+		}
+	}
+
+	private boolean compareDate(String exp, String res) {
+		try {
+			if (parseDate(exp).compareTo(parseDate(res)) == 0) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (NullPointerException e) {
+			return false;
+		}
+	}
+
+	private Date parseDate(String dat) {
+		try {
+			switch (dat.length()) {
+			case 10:
+				return SDF10.parse(dat);
+			case 19:
+				return SDF19.parse(dat);
+			default:
+				return null;
+			}
+		} catch (java.text.ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+//		try {
+//			return Date.parse(dat);
+//		} catch (NumberFormatException nfe) {
+//			return 0f;
+//		}
+//	}
+
 	/**
 	 * 差異のある項目を[]で括って１レコードの全項目を文字列化。
-	 * 
+	 *
 	 * @param dats
 	 * @param unmatchCol
 	 * @return
@@ -313,7 +359,7 @@ public class DiffCsv {
 
 	/**
 	 * キー項目を１つの文字列に連結。
-	 * 
+	 *
 	 * @param dat
 	 * @return
 	 */
@@ -328,7 +374,7 @@ public class DiffCsv {
 
 	/**
 	 * 複数の結果ファイルを１つのコレクションを作成。
-	 * 
+	 *
 	 * @return
 	 * @throws IOException
 	 */
@@ -346,7 +392,7 @@ public class DiffCsv {
 
 	/**
 	 * 指定したパス＋データ以下のサブディレクトリから再帰的にファイルを取得。
-	 * 
+	 *
 	 * @param path
 	 * @return
 	 */
@@ -369,7 +415,7 @@ public class DiffCsv {
 	/**
 	 * generate record list for expect data from csv.
 	 * <p>
-	 * 
+	 *
 	 * @return record list
 	 * @throws IOException expect file
 	 */
@@ -406,6 +452,11 @@ public class DiffCsv {
 		initializeBtscCalcChkCnt();
 		initializeBtscBpExtStatus();
 		initializeBtsKKakuteiJLExt();
+		initializeBtscIf0101RenkeiData();
+		initializeBtscIf0102RenkeiData();
+		initializeBtscIf0209RenkeiData();
+		initializeBtscIf0404RenkeiData();
+		initializeBtscKeiyakuCheck();
 	}
 
 	public DiffCsv(String expect, String result, String batch, String data, int excludeTargetCol,
@@ -446,8 +497,9 @@ public class DiffCsv {
 		for (int i = 8; i < 57; i++) {
 			floatSet1.add(i);
 		}
+		Set<Integer> dateSet = new HashSet<Integer>();
 		Integer[] exclude1 = { 109, 110, 111 };
-		dataAttrMap.put("BTSC_YUKO_KWH_L_EXT", new DataAttr(key1, floatSet1, exclude1));
+		dataAttrMap.put("BTSC_YUKO_KWH_L_EXT", new DataAttr(key1, floatSet1, dateSet, exclude1));
 	}
 
 	/**
@@ -459,8 +511,9 @@ public class DiffCsv {
 		for (int i = 4; i < 52; i++) {
 			floatSet2.add(i);
 		}
+		Set<Integer> dateSet = new HashSet<Integer>();
 		Integer[] exclude2 = { 0, 100 };
-		dataAttrMap.put("BTS_YUKO_KWH_L_EXT", new DataAttr(key2, floatSet2, exclude2));
+		dataAttrMap.put("BTS_YUKO_KWH_L_EXT", new DataAttr(key2, floatSet2, dateSet, exclude2));
 	}
 
 	/**
@@ -472,8 +525,9 @@ public class DiffCsv {
 		for (int i = 5; i < 5 + 96; i += 2) {
 			floatSet.add(i);
 		}
+		Set<Integer> dateSet = new HashSet<Integer>();
 		Integer[] exclude = {};
-		dataAttrMap.put("IF0511", new DataAttr(key, floatSet, exclude));
+		dataAttrMap.put("IF0511", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
 	/**
@@ -483,8 +537,9 @@ public class DiffCsv {
 		int[] key = { 0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13 };
 		Set<Integer> floatSet = new HashSet<Integer>();
 		floatSet.add(15);
+		Set<Integer> dateSet = new HashSet<Integer>();
 		Integer[] exclude = { 21, 22 };
-		dataAttrMap.put("BTSC_BEFORE_CALC_CHK_L", new DataAttr(key, floatSet, exclude));
+		dataAttrMap.put("BTSC_BEFORE_CALC_CHK_L", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
 	/**
@@ -493,9 +548,9 @@ public class DiffCsv {
 	private void initializeBtscBeforeCalcChkLDetail() {
 		int[] key = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
 		Set<Integer> floatSet = new HashSet<Integer>();
-		// numberなし
+		Set<Integer> dateSet = new HashSet<Integer>();
 		Integer[] exclude = { 21, 22 };
-		dataAttrMap.put("BTSC_BEFORE_CALC_CHK_L_DETAIL", new DataAttr(key, floatSet, exclude));
+		dataAttrMap.put("BTSC_BEFORE_CALC_CHK_L_DETAIL", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
 	/**
@@ -510,8 +565,9 @@ public class DiffCsv {
 		for (int i = 11; i < 17; i++) {
 			floatSet.add(i);
 		}
+		Set<Integer> dateSet = new HashSet<Integer>();
 		Integer[] exclude = { 10 };
-		dataAttrMap.put("BTSC_CALC_CHK_CNT", new DataAttr(key, floatSet, exclude));
+		dataAttrMap.put("BTSC_CALC_CHK_CNT", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
 	/**
@@ -520,8 +576,9 @@ public class DiffCsv {
 	private void initializeBtscBpExtStatus() {
 		int[] key = { 0, 1, 2, 3, 4 };
 		Set<Integer> floatSet = new HashSet<Integer>();
-		Integer[] exclude = { 5,6,7,8 };
-		dataAttrMap.put("BTSC_BP_EXT_STATUS", new DataAttr(key, floatSet, exclude));
+		Set<Integer> dateSet = new HashSet<Integer>();
+		Integer[] exclude = { 5, 6, 7, 8 };
+		dataAttrMap.put("BTSC_BP_EXT_STATUS", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
 	/**
@@ -533,8 +590,100 @@ public class DiffCsv {
 		for (int i = 5; i < 27; i++) {
 			floatSet.add(i);
 		}
+		Set<Integer> dateSet = new HashSet<Integer>();
 		Integer[] exclude = { 28 };
-		dataAttrMap.put("BTS_K_KAKUTEI_J_L_EXT", new DataAttr(key, floatSet, exclude));
+		dataAttrMap.put("BTS_K_KAKUTEI_J_L_EXT", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	/**
+	 * BTSC_IF0101_RENKEI_DATA
+	 */
+	private void initializeBtscIf0101RenkeiData() {
+		// キーカラム
+		int[] key = { 25 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		for (int i = 10; i < 12; i++) {
+			floatSet.add(i);
+		}
+		for (int i = 16; i < 25; i++) {
+			floatSet.add(i);
+		}
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		dateSet.add(13);
+		dateSet.add(14);
+		// 比較除外カラム
+		Integer[] exclude = { 0, 1, 26, 28, 29, 30, 31 };
+		dataAttrMap.put("BTSC_IF0101_RENKEI_DATA", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	/**
+	 * BTSC_IF0102_RENKEI_DATA
+	 */
+	private void initializeBtscIf0102RenkeiData() {
+		// キーカラム
+		int[] key = { 2, 4, 6, 9 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		dateSet.add(7);
+		dateSet.add(8);
+		// 比較除外カラム
+		Integer[] exclude = { 0, 1, 10, 12, 13, 14, 15 };
+		dataAttrMap.put("BTSC_IF0102_RENKEI_DATA", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	/**
+	 * BTSC_IF0209_RENKEI_DATA
+	 */
+	private void initializeBtscIf0209RenkeiData() {
+		// キーカラム
+		int[] key = { 7 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		dateSet.add(5);
+		dateSet.add(6);
+		// 比較除外カラム
+		Integer[] exclude = { 0, 1, 8, 10, 11, 12, 13 };
+		dataAttrMap.put("BTSC_IF0209_RENKEI_DATA", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	/**
+	 * BTSC_IF0404_RENKEI_DATA
+	 */
+	private void initializeBtscIf0404RenkeiData() {
+		// キーカラム
+		int[] key = { 9 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		dateSet.add(7);
+		dateSet.add(8);
+		// 比較除外カラム
+		Integer[] exclude = { 0, 1, 10, 12, 13, 14, 15 };
+		dataAttrMap.put("BTSC_IF0404_RENKEI_DATA", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	/**
+	 * BTSC_KEIYAKU_CHECK
+	 */
+	private void initializeBtscKeiyakuCheck() {
+		// キーカラム
+		int[] key = { 3, 4, 5, 6 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		dateSet.add(9);
+		dateSet.add(10);
+		// 比較除外カラム
+		Integer[] exclude = { 0, 1, 2, 14, 15, 16, 17 };
+		dataAttrMap.put("BTSC_KEIYAKU_CHECK", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
 	public class DataAttr {
@@ -543,21 +692,23 @@ public class DiffCsv {
 		int[] keyCols;
 		/** float比較カラムNo */
 		Set<Integer> floatCheckSet;
+		/** Date比較カラムNo */
+		Set<Integer> dateCheckSet;
 		/** チェック除外カラムNo。更新日、ファイルパスなど。 */
 		List<Integer> excludeCols;
 
 		/**
 		 * データ属性コンストラクタ。
-		 * 
-		 * @param keyCols       キー項目カラム。
-		 * @param floatSet      数値比較カラム。
-		 * @param targetCol     対象抽出カラム１つのみ。
-		 * @param targetUpdater 対象抽出項目１つのみ。
-		 * @param excludeCols   比較除外カラム。
+		 *
+		 * @param keyCols      キー項目カラム。
+		 * @param floatSet     数値カラム。
+		 * @param dateCheckSet 日付カラム。
+		 * @param excludeCols  比較除外カラム。
 		 */
-		public DataAttr(int[] keyCols, Set<Integer> floatCheckSet, Integer[] excludeCols) {
+		public DataAttr(int[] keyCols, Set<Integer> floatCheckSet, Set<Integer> dateCheckSet, Integer[] excludeCols) {
 			this.keyCols = keyCols;
 			this.floatCheckSet = floatCheckSet;
+			this.dateCheckSet = dateCheckSet;
 			this.excludeCols = Arrays.asList(excludeCols);
 		}
 	}
