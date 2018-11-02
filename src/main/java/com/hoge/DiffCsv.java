@@ -387,6 +387,14 @@ public class DiffCsv {
 				resList.addAll(readCsvToList(file.getAbsolutePath()));
 			}
 		}
+		// 除外
+//		Iterator<String[]> it = resList.iterator();
+//		while (it.hasNext()) {
+//			String[] data = it.next();
+//			if (!"BTS-B003DP".equalsIgnoreCase(data[16])) {
+//				it.remove();
+//			}
+//		}
 		return resList;
 	}
 
@@ -457,6 +465,12 @@ public class DiffCsv {
 		initializeBtscIf0209RenkeiData();
 		initializeBtscIf0404RenkeiData();
 		initializeBtscKeiyakuCheck();
+		initializeBtsYukoKwhLEigyoExt();
+		initializeBtscYukoKwhMonthLExt();
+		initializeBtscShijisuIf();
+		initializeBtscShijisuChkRes();
+		initializeIf0506();
+		initializeIf0514();
 	}
 
 	public DiffCsv(String expect, String result, String batch, String data, int excludeTargetCol,
@@ -684,6 +698,118 @@ public class DiffCsv {
 		// 比較除外カラム
 		Integer[] exclude = { 0, 1, 2, 14, 15, 16, 17 };
 		dataAttrMap.put("BTSC_KEIYAKU_CHECK", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	/**
+	 * BTS_YUKO_KWH_L_EIGYO_EXT
+	 */
+	private void initializeBtsYukoKwhLEigyoExt() {
+		// キーカラム
+		int[] key = { 0, 1, 2, 3 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		for (int i = 4; i < 52; i++) {
+			floatSet.add(i);
+		}
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		// 比較除外カラム
+		Integer[] exclude = { 52 };
+		dataAttrMap.put("BTS_YUKO_KWH_L_EIGYO_EXT", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	/**
+	 * BTSC_YUKO_KWH_MONTH_L_EXT
+	 */
+	private void initializeBtscYukoKwhMonthLExt() {
+		// キーカラム
+		int[] key = { 0, 1, 2, 3, 4 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		for (int i = 5; i < 14; i++) {
+			floatSet.add(i);
+		}
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		dateSet.add(18);
+		dateSet.add(19);
+		// 比較除外カラム
+		Integer[] exclude = { 23, 24, 25, 26 };
+		dataAttrMap.put("BTSC_YUKO_KWH_MONTH_L_EXT", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	/**
+	 * BTSC_SHIJISU_IF
+	 */
+	private void initializeBtscShijisuIf() {
+		// キーカラム
+		int[] key = { 0, 1, 2, 3, 4, 5, 6, 7 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		for (int i = 8; i < 12; i++) {
+			floatSet.add(i);
+		}
+		for (int i = 13; i < 17; i++) {
+			floatSet.add(i);
+		}
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		dateSet.add(19);
+		dateSet.add(20);
+		// 比較除外カラム
+		Integer[] exclude = { 26, 27, 28, 29 };
+		dataAttrMap.put("BTSC_SHIJISU_IF", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	/**
+	 * BTSC_SHIJISU_CHK_RES
+	 */
+	private void initializeBtscShijisuChkRes() {
+		// キーカラム
+		int[] key = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		// 比較除外カラム
+		Integer[] exclude = { 21, 22, 23, 24 };
+		dataAttrMap.put("BTSC_SHIJISU_CHK_RES", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	/**
+	 * IF0506
+	 */
+	private void initializeIf0506() {
+		// キーカラム
+		int[] key = { 0, 1, 2, 3, 4, 5, 6 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		for (int i = 7; i < 55; i++) {
+			floatSet.add(i);
+		}
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		// 比較除外カラム
+		Integer[] exclude = {};
+		dataAttrMap.put("IF0506", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	/**
+	 * IF0514
+	 */
+	private void initializeIf0514() {
+		// キーカラム
+		int[] key = { 0, 1, 2, 3, 4, 5, 6 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		for (int i = 7; i < 55; i++) {
+			floatSet.add(i);
+		}
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		// 比較除外カラム
+		Integer[] exclude = {};
+		dataAttrMap.put("IF0514", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
 	public class DataAttr {
