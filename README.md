@@ -33,3 +33,4 @@
 * IF05-14 key:0,1,2,3,4,5,6
 11/6追加
 * BTSC_KEIYAKU_ERROR_INFO key:3, 4
+* BTSC_K_SIJISU_J_L_EXT key:0, 1, 2, 3, 4, 5, 6

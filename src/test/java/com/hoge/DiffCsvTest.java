@@ -438,4 +438,23 @@ public class DiffCsvTest {
 		Assert.assertEquals(0, target.getNotFoundExpCount());
 	}
 
+	//	btscKSijisuJLExt
+	@Test
+	public void testBtscKSijisuJLExt() throws IOException {
+		DiffCsv target = new DiffCsv( //
+				"src/test/resources/com/hoge/btsc_k_sijisu_j_l_ext/exp", // -e
+				"src/test/resources/com/hoge/btsc_k_sijisu_j_l_ext/res", // -r
+				"btsb004dp", // -b
+				"BTSC_K_SIJISU_J_L_EXT", // -d
+				0, // -targetCol
+				null, // -targetValue
+				true// -l
+		);
+		target.exec();
+		Assert.assertEquals(8, target.getMatchCount());
+		Assert.assertEquals(0, target.getUnMatchCount());
+		Assert.assertEquals(318, target.getNotFoundResCount());
+		Assert.assertEquals(0, target.getNotFoundExpCount());
+	}
+
 }
