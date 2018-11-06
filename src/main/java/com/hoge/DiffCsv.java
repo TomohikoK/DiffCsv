@@ -471,6 +471,7 @@ public class DiffCsv {
 		initializeBtscShijisuChkRes();
 		initializeIf0506();
 		initializeIf0514();
+		initializeBtscKeiyakuErrorInfo();
 	}
 
 	public DiffCsv(String expect, String result, String batch, String data, int excludeTargetCol,
@@ -810,6 +811,21 @@ public class DiffCsv {
 		// 比較除外カラム
 		Integer[] exclude = {};
 		dataAttrMap.put("IF0514", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	/**
+	 * BTSC_KEIYAKU_ERROR_INFO
+	 */
+	private void initializeBtscKeiyakuErrorInfo() {
+		// キーカラム
+		int[] key = { 3,4 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		// 比較除外カラム
+		Integer[] exclude = { 0, 1,4, 13, 14, 15, 16 };
+		dataAttrMap.put("BTSC_KEIYAKU_ERROR_INFO", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
 	public class DataAttr {
