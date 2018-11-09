@@ -473,6 +473,7 @@ public class DiffCsv {
 		initializeIf0514();
 		initializeBtscKeiyakuErrorInfo();
 		initializeBtscKSijisuJLExt();
+		initializeBtscDoujidoryoFileStatus();
 	}
 
 	public DiffCsv(String expect, String result, String batch, String data, int excludeTargetCol,
@@ -847,6 +848,27 @@ public class DiffCsv {
 		// 比較除外カラム
 		Integer[] exclude = { 21, 22, 23, 24 };
 		dataAttrMap.put("BTSC_K_SIJISU_J_L_EXT", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	/**
+	 * BTSC_DOUJIDORYO_FILE_STATUS
+	 */
+	private void initializeBtscDoujidoryoFileStatus() {
+		// キーカラム
+		int[] key = { 0, 2, 3 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		for (int i = 4; i < 8; i++) {
+			floatSet.add(i);
+		}
+		floatSet.add(10);
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		dateSet.add(1);
+		dateSet.add(8);
+		// 比較除外カラム
+		Integer[] exclude = { 8, 11, 12, 13, 14, 15 };
+		dataAttrMap.put("BTSC_DOUJIDORYO_FILE_STATUS", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
 	public class DataAttr {
