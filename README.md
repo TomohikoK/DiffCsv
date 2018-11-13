@@ -36,3 +36,5 @@
 * BTSC_K_SIJISU_J_L_EXT key:0, 1, 2, 3, 4, 5, 6
 11/9追加
 * BTSC_DOUJIDORYO_FILE_STATUS key:0, 2, 3
+11/13
+* 出力結果に結果(res)のキー重複件数を追加。
