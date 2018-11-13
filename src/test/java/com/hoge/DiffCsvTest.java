@@ -234,11 +234,12 @@ public class DiffCsvTest {
 				true// -l
 		);
 		target.exec();
-		Assert.assertEquals(27, target.getMatchCount());
+		Assert.assertEquals(2666, target.getMatchCount());
 		Assert.assertEquals(0, target.getUnMatchCount());
 		Assert.assertEquals(0, target.getNotFoundResCount());
 		Assert.assertEquals(0, target.getNotFoundExpCount());
-	}
+		Assert.assertEquals(141, target.getResDup());
+		}
 
 	@Test
 	public void testBtscIf0102RenkeiData() throws IOException {
@@ -436,6 +437,7 @@ public class DiffCsvTest {
 		Assert.assertEquals(102, target.getUnMatchCount());
 		Assert.assertEquals(764, target.getNotFoundResCount());
 		Assert.assertEquals(0, target.getNotFoundExpCount());
+		Assert.assertEquals(0, target.getResDup());
 	}
 
 	@Test

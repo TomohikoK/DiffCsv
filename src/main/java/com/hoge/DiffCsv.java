@@ -49,6 +49,7 @@ public class DiffCsv {
 	private int notFoundResCount;
 	private int matchCount;
 	private int notFoundExpCount;
+	private int resDup;
 
 	public static void main(String[] args) throws ParseException {
 		logger.info("start...");
@@ -178,6 +179,7 @@ public class DiffCsv {
 		logger.info("unmatch  " + unMatchCount);
 		logger.info("notFoundRes " + notFoundResCount);
 		logger.info("notFoundExp " + notFoundExpCount);
+		logger.info("resDup " + resDup);
 	}
 
 	/**
@@ -194,15 +196,21 @@ public class DiffCsv {
 			for (String[] res : resList) {
 				// 存在するか？キーで比較
 				if (expKey.equalsIgnoreCase(getKeyStr(res))) {
-					found = true;
-					if (compareData(exp, res)) {
-						if (showDetail)
-							System.out.println("match\t" + String.join(DELIMITTER, exp));
-						matchCount++;
+					if (found) {
+						// 重複
+						System.out.println("dup res\t" + String.join(DELIMITTER, res));
+						this.resDup++;
 					} else {
-						unMatchCount++;
+						found = true;
+						if (compareData(exp, res)) {
+							if (showDetail)
+								System.out.println("match\t" + String.join(DELIMITTER, exp));
+							matchCount++;
+						} else {
+							unMatchCount++;
+						}
 					}
-					break;
+//					break;
 				}
 			}
 			if (!found) {
@@ -504,6 +512,10 @@ public class DiffCsv {
 		return notFoundExpCount;
 	}
 
+	public int getResDup() {
+		return resDup;
+	}
+
 	/**
 	 * BTSC_YUKO_KWH_L_EXT
 	 */
@@ -617,7 +629,7 @@ public class DiffCsv {
 	 */
 	private void initializeBtscIf0101RenkeiData() {
 		// キーカラム
-		int[] key = { 25 };
+		int[] key = { 0 };
 		// 数値型カラム
 		Set<Integer> floatSet = new HashSet<Integer>();
 		for (int i = 10; i < 12; i++) {
@@ -631,7 +643,7 @@ public class DiffCsv {
 		dateSet.add(13);
 		dateSet.add(14);
 		// 比較除外カラム
-		Integer[] exclude = { 0, 1, 26, 28, 29, 30, 31 };
+		Integer[] exclude = { 30, 31 };
 		dataAttrMap.put("BTSC_IF0101_RENKEI_DATA", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
