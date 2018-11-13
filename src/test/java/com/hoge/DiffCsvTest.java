@@ -307,10 +307,10 @@ public class DiffCsvTest {
 				true// -l
 		);
 		target.exec();
-		Assert.assertEquals(551, target.getMatchCount());
-		Assert.assertEquals(5277, target.getUnMatchCount());
+		Assert.assertEquals(5826, target.getMatchCount());
+		Assert.assertEquals(2, target.getUnMatchCount());
 		Assert.assertEquals(0, target.getNotFoundResCount());
-		Assert.assertEquals(2, target.getNotFoundExpCount());
+		Assert.assertEquals(0, target.getNotFoundExpCount());
 	}
 
 	@Test
@@ -319,16 +319,17 @@ public class DiffCsvTest {
 				"src/test/resources/com/hoge/btsc_keiyaku_check_NEW/exp", // -e
 				"src/test/resources/com/hoge/btsc_keiyaku_check_NEW/res", // -r
 				"btsb004dp", // -b
-				"BTSC_KEIYAKU_CHECK", // -d
+				"BTSC_KEIYAKU_CHECK_NEW", // -d
 				0, // -targetCol
 				null, // -targetValue
 				true// -l
 		);
 		target.exec();
-		Assert.assertEquals(702, target.getMatchCount());
-		Assert.assertEquals(127, target.getUnMatchCount());
-		Assert.assertEquals(983, target.getNotFoundResCount());
+		Assert.assertEquals(703, target.getMatchCount());
+		Assert.assertEquals(124, target.getUnMatchCount());
+		Assert.assertEquals(985, target.getNotFoundResCount());
 		Assert.assertEquals(2, target.getNotFoundExpCount());
+		Assert.assertEquals(0, target.getResDup());
 	}
 
 	@Test

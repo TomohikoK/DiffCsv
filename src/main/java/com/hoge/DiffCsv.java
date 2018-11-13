@@ -473,6 +473,7 @@ public class DiffCsv {
 		initializeBtscIf0209RenkeiData();
 		initializeBtscIf0404RenkeiData();
 		initializeBtscKeiyakuCheck();
+		initializeBtscKeiyakuCheckNew();
 		initializeBtsYukoKwhLEigyoExt();
 		initializeBtscYukoKwhMonthLExt();
 		initializeBtscShijisuIf();
@@ -703,7 +704,25 @@ public class DiffCsv {
 	 */
 	private void initializeBtscKeiyakuCheck() {
 		// キーカラム
-		int[] key = { 3, 4, 5, 6 };
+		int[] key = { 0, 1 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		dateSet.add(9);
+		dateSet.add(10);
+		// 比較除外カラム
+//		Integer[] exclude = { 2, 14, 15, 16, 17 };
+		Integer[] exclude = { 16, 17 };
+		dataAttrMap.put("BTSC_KEIYAKU_CHECK", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	/**
+	 * BTSC_KEIYAKU_CHECK_NEW
+	 */
+	private void initializeBtscKeiyakuCheckNew() {
+		// キーカラム
+		int[] key = { 3, 4, 5, 6, 7, 8 };
 		// 数値型カラム
 		Set<Integer> floatSet = new HashSet<Integer>();
 		// 日付型カラム指定
@@ -712,7 +731,7 @@ public class DiffCsv {
 		dateSet.add(10);
 		// 比較除外カラム
 		Integer[] exclude = { 0, 1, 2, 14, 15, 16, 17 };
-		dataAttrMap.put("BTSC_KEIYAKU_CHECK", new DataAttr(key, floatSet, dateSet, exclude));
+		dataAttrMap.put("BTSC_KEIYAKU_CHECK_NEW", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
 	/**

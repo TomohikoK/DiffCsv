@@ -38,3 +38,5 @@
 * BTSC_DOUJIDORYO_FILE_STATUS key:0, 2, 3
 11/13
 * 出力結果に結果(res)のキー重複件数を追加。
+* BTSC_KEIYAKU_CHECK key:0,1 のキー項目を変更
+* BTSC_KEIYAKU_CHECK_NEW key:3,4,5,6,7,8 修正。新規の採番項目は一致できないため内容項目をキーとして比較。
