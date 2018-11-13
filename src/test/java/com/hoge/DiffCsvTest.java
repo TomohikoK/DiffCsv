@@ -433,11 +433,11 @@ public class DiffCsvTest {
 				true// -l
 		);
 		target.exec();
-		Assert.assertEquals(1, target.getMatchCount());
-		Assert.assertEquals(102, target.getUnMatchCount());
-		Assert.assertEquals(764, target.getNotFoundResCount());
+		Assert.assertEquals(296, target.getMatchCount());
+		Assert.assertEquals(22, target.getUnMatchCount());
+		Assert.assertEquals(0, target.getNotFoundResCount());
 		Assert.assertEquals(0, target.getNotFoundExpCount());
-		Assert.assertEquals(0, target.getResDup());
+		Assert.assertEquals(203, target.getResDup());
 	}
 
 	@Test
