@@ -35,6 +35,7 @@ public class DiffCsv {
 	static private String DELIMITTER = "\t";
 	static private SimpleDateFormat SDF10 = new SimpleDateFormat("yyyy-MM-dd");
 	static private SimpleDateFormat SDF19 = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
+	static private SimpleDateFormat SDF26 = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS.ssssss");
 	private boolean showDetail;
 	private String expect;
 	private String result;
@@ -173,7 +174,8 @@ public class DiffCsv {
 		compareExpToResList(expList, resList);
 		compareResToExpList(resList, expList);
 
-		logger.info("exp liens = " + expList.size());
+		logger.info(this.data);
+		logger.info("exp lines = " + expList.size());
 		logger.info("res lines = " + resList.size());
 		logger.info("match  " + matchCount);
 		logger.info("unmatch  " + unMatchCount);
@@ -321,11 +323,14 @@ public class DiffCsv {
 
 	private Date parseDate(String dat) {
 		try {
+			// 2018-08-23 10:54:26.000000
 			switch (dat.length()) {
 			case 10:
 				return SDF10.parse(dat);
 			case 19:
 				return SDF19.parse(dat);
+			case 26:
+				return SDF26.parse(dat);
 			default:
 				return null;
 			}
@@ -483,6 +488,8 @@ public class DiffCsv {
 		initializeBtscKeiyakuErrorInfo();
 		initializeBtscKSijisuJLExt();
 		initializeBtscDoujidoryoFileStatus();
+		initializeBtscIdoInfoList();
+		initializeBtsHikinukiL();
 	}
 
 	public DiffCsv(String expect, String result, String batch, String data, int excludeTargetCol,
@@ -630,7 +637,7 @@ public class DiffCsv {
 	 */
 	private void initializeBtscIf0101RenkeiData() {
 		// キーカラム
-		int[] key = { 0 };
+		int[] key = { 2, 3, 4, 5, 6 };
 		// 数値型カラム
 		Set<Integer> floatSet = new HashSet<Integer>();
 		for (int i = 10; i < 12; i++) {
@@ -641,10 +648,11 @@ public class DiffCsv {
 		}
 		// 日付型カラム指定
 		Set<Integer> dateSet = new HashSet<Integer>();
+		dateSet.add(1);
 		dateSet.add(13);
 		dateSet.add(14);
 		// 比較除外カラム
-		Integer[] exclude = { 30, 31 };
+		Integer[] exclude = { 0, 26, 28, 29, 30, 31 };
 		dataAttrMap.put("BTSC_IF0101_RENKEI_DATA", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
@@ -653,7 +661,7 @@ public class DiffCsv {
 	 */
 	private void initializeBtscIf0102RenkeiData() {
 		// キーカラム
-		int[] key = { 2, 4, 6, 9 };
+		int[] key = { 2, 3, 4, 6, 9 };
 		// 数値型カラム
 		Set<Integer> floatSet = new HashSet<Integer>();
 		// 日付型カラム指定
@@ -661,7 +669,7 @@ public class DiffCsv {
 		dateSet.add(7);
 		dateSet.add(8);
 		// 比較除外カラム
-		Integer[] exclude = { 0, 1, 10, 12, 13, 14, 15 };
+		Integer[] exclude = { 0, 1, 2, 10, 12, 13, 14, 15 };
 		dataAttrMap.put("BTSC_IF0102_RENKEI_DATA", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
@@ -704,7 +712,7 @@ public class DiffCsv {
 	 */
 	private void initializeBtscKeiyakuCheck() {
 		// キーカラム
-		int[] key = { 0, 1 };
+		int[] key = { 0 };
 		// 数値型カラム
 		Set<Integer> floatSet = new HashSet<Integer>();
 		// 日付型カラム指定
@@ -712,8 +720,7 @@ public class DiffCsv {
 		dateSet.add(9);
 		dateSet.add(10);
 		// 比較除外カラム
-//		Integer[] exclude = { 2, 14, 15, 16, 17 };
-		Integer[] exclude = { 16, 17 };
+		Integer[] exclude = { 2, 14, 15, 16, 17 };
 		dataAttrMap.put("BTSC_KEIYAKU_CHECK", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
@@ -900,6 +907,42 @@ public class DiffCsv {
 		// 比較除外カラム
 		Integer[] exclude = { 8, 11, 12, 13, 14, 15 };
 		dataAttrMap.put("BTSC_DOUJIDORYO_FILE_STATUS", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	/**
+	 * BTSC_IDO_INFO_LIST
+	 */
+	private void initializeBtscIdoInfoList() {
+		// キーカラム
+		int[] key = { 1, 2, 3, 4, 5, 6, 7 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		floatSet.add(8);
+		floatSet.add(12);
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		dateSet.add(9);
+		dateSet.add(10);
+		dateSet.add(11);
+		dateSet.add(17);
+		// 比較除外カラム
+		Integer[] exclude = { 0, 18, 19, 20, 21 };
+		dataAttrMap.put("BTSC_IDO_INFO_LIST", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	/**
+	 * BTS_HIKINUKI_L
+	 */
+	private void initializeBtsHikinukiL() {
+		// キーカラム
+		int[] key = { 0,1,2 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		// 比較除外カラム
+		Integer[] exclude = {  };
+		dataAttrMap.put("BTS_HIKINUKI_L", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
 	public class DataAttr {

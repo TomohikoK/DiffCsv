@@ -238,7 +238,7 @@ public class DiffCsvTest {
 		Assert.assertEquals(0, target.getUnMatchCount());
 		Assert.assertEquals(0, target.getNotFoundResCount());
 		Assert.assertEquals(0, target.getNotFoundExpCount());
-		Assert.assertEquals(141, target.getResDup());
+		Assert.assertEquals(143, target.getResDup());
 		}
 
 	@Test
@@ -475,6 +475,44 @@ public class DiffCsvTest {
 		Assert.assertEquals(121, target.getUnMatchCount());
 		Assert.assertEquals(0, target.getNotFoundResCount());
 		Assert.assertEquals(0, target.getNotFoundExpCount());
+	}
+
+	@Test
+	public void testBtscIdoInfoList() throws IOException {
+		DiffCsv target = new DiffCsv( //
+				"src/test/resources/com/hoge/btsc_ido_info_list/exp", // -e
+				"src/test/resources/com/hoge/btsc_ido_info_list/res", // -r
+				"btsb004dp", // -b
+				"BTSC_IDO_INFO_LIST", // -d
+				0, // -targetCol
+				null, // -targetValue
+				true// -l
+		);
+		target.exec();
+		Assert.assertEquals(0, target.getMatchCount());
+		Assert.assertEquals(20, target.getUnMatchCount());
+		Assert.assertEquals(10, target.getNotFoundResCount());
+		Assert.assertEquals(0, target.getNotFoundExpCount());
+		Assert.assertEquals(0, target.getResDup());
+	}
+
+	@Test
+	public void testBtsHikinukiL() throws IOException {
+		DiffCsv target = new DiffCsv( //
+				"src/test/resources/com/hoge/bts_hikinuki_l/exp", // -e
+				"src/test/resources/com/hoge/bts_hikinuki_l/res", // -r
+				"btsb004dp", // -b
+				"BTS_HIKINUKI_L", // -d
+				0, // -targetCol
+				null, // -targetValue
+				true// -l
+		);
+		target.exec();
+		Assert.assertEquals(31, target.getMatchCount());
+		Assert.assertEquals(0, target.getUnMatchCount());
+		Assert.assertEquals(714, target.getNotFoundResCount());
+		Assert.assertEquals(7, target.getNotFoundExpCount());
+		Assert.assertEquals(0, target.getResDup());
 	}
 
 }
