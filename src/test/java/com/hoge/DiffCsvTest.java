@@ -239,7 +239,7 @@ public class DiffCsvTest {
 		Assert.assertEquals(0, target.getNotFoundResCount());
 		Assert.assertEquals(0, target.getNotFoundExpCount());
 		Assert.assertEquals(143, target.getResDup());
-		}
+	}
 
 	@Test
 	public void testBtscIf0102RenkeiData() throws IOException {
@@ -512,6 +512,120 @@ public class DiffCsvTest {
 		Assert.assertEquals(0, target.getUnMatchCount());
 		Assert.assertEquals(714, target.getNotFoundResCount());
 		Assert.assertEquals(7, target.getNotFoundExpCount());
+		Assert.assertEquals(0, target.getResDup());
+	}
+
+	@Test
+	public void testIf0101() throws IOException {
+		DiffCsv target = new DiffCsv( //
+				"src/test/resources/com/hoge/if0101/exp", // -e
+				"src/test/resources/com/hoge/if0101/res", // -r
+				"btsb004dp", // -b
+				"IF0101", // -d
+				0, // -targetCol
+				null, // -targetValue
+				true// -l
+		);
+		target.exec();
+		Assert.assertEquals(21, target.getMatchCount());
+		Assert.assertEquals(0, target.getUnMatchCount());
+		Assert.assertEquals(0, target.getNotFoundResCount());
+		Assert.assertEquals(0, target.getNotFoundExpCount());
+		Assert.assertEquals(14, target.getResDup());
+	}
+
+	@Test
+	public void testIf0101Watari() throws IOException {
+		DiffCsv target = new DiffCsv( //
+				"src/test/resources/com/hoge/if0101_watari/exp", // -e
+				"src/test/resources/com/hoge/if0101_watari/res", // -r
+				"btsb004dp", // -b
+				"IF0101_WATARI", // -d
+				0, // -targetCol
+				null, // -targetValue
+				true// -l
+		);
+		target.exec();
+		Assert.assertEquals(6, target.getMatchCount());
+		Assert.assertEquals(0, target.getUnMatchCount());
+		Assert.assertEquals(0, target.getNotFoundResCount());
+		Assert.assertEquals(0, target.getNotFoundExpCount());
+		Assert.assertEquals(3, target.getResDup());
+	}
+
+	@Test
+	public void testIf0102() throws IOException {
+		DiffCsv target = new DiffCsv( //
+				"src/test/resources/com/hoge/if0102/exp", // -e
+				"src/test/resources/com/hoge/if0102/res", // -r
+				"btsb004dp", // -b
+				"IF0102", // -d
+				0, // -targetCol
+				null, // -targetValue
+				true// -l
+		);
+		target.exec();
+		Assert.assertEquals(5, target.getMatchCount());
+		Assert.assertEquals(0, target.getUnMatchCount());
+		Assert.assertEquals(8, target.getNotFoundResCount());
+		Assert.assertEquals(0, target.getNotFoundExpCount());
+		Assert.assertEquals(0, target.getResDup());
+	}
+
+	@Test
+	public void testIf0209() throws IOException {
+		DiffCsv target = new DiffCsv( //
+				"src/test/resources/com/hoge/if0209/exp", // -e
+				"src/test/resources/com/hoge/if0209/res", // -r
+				"btsb004dp", // -b
+				"IF0209", // -d
+				0, // -targetCol
+				null, // -targetValue
+				true// -l
+		);
+		target.exec();
+		Assert.assertEquals(1, target.getMatchCount());
+		Assert.assertEquals(0, target.getUnMatchCount());
+		Assert.assertEquals(0, target.getNotFoundResCount());
+		Assert.assertEquals(0, target.getNotFoundExpCount());
+		Assert.assertEquals(0, target.getResDup());
+	}
+
+	@Test
+	public void testIf0404() throws IOException {
+		DiffCsv target = new DiffCsv( //
+				"src/test/resources/com/hoge/if0404/exp", // -e
+				"src/test/resources/com/hoge/if0404/res", // -r
+				"btsb004dp", // -b
+				"IF0404", // -d
+				0, // -targetCol
+				null, // -targetValue
+				true// -l
+		);
+		target.exec();
+		Assert.assertEquals(7, target.getMatchCount());
+		Assert.assertEquals(0, target.getUnMatchCount());
+		Assert.assertEquals(2, target.getNotFoundResCount());
+		Assert.assertEquals(0, target.getNotFoundExpCount());
+		Assert.assertEquals(0, target.getResDup());
+	}
+
+	@Test
+	public void testIf0404Watari() throws IOException {
+		DiffCsv target = new DiffCsv( //
+				"src/test/resources/com/hoge/if0404_watari/exp", // -e
+				"src/test/resources/com/hoge/if0404_watari/res", // -r
+				"btsb004dp", // -b
+				"IF0404_WATARI", // -d
+				0, // -targetCol
+				null, // -targetValue
+				true// -l
+		);
+		target.exec();
+		Assert.assertEquals(2, target.getMatchCount());
+		Assert.assertEquals(0, target.getUnMatchCount());
+		Assert.assertEquals(4, target.getNotFoundResCount());
+		Assert.assertEquals(0, target.getNotFoundExpCount());
 		Assert.assertEquals(0, target.getResDup());
 	}
 

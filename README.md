@@ -43,3 +43,9 @@
 11/14
 * BTSC_IDO_INFO_LIST key:1, 2, 3, 4, 5, 6, 7
 * BTS_HIKINUKI_L key:0, 1, 2
+* IF0101 key:0,1,2
+* IF0101_WATARI key:0,1,2
+* IF0102 key:0,1,2
+* IF0209 key:0,1,2
+* IF0404 key:0,1,2
+* IF0404_WATARI key:0,1,2

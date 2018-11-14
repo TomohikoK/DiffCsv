@@ -462,36 +462,6 @@ public class DiffCsv {
 		return retList;
 	}
 
-	public DiffCsv() {
-		dataAttrMap = new HashMap<String, DataAttr>();
-
-		initializeBtscYukoKwhLExt();
-		initializeBtsYukoKwhLExt();
-		initializeIf0511();
-		initializeBtscBeforeCalcChkL();
-		initializeBtscBeforeCalcChkLDetail();
-		initializeBtscCalcChkCnt();
-		initializeBtscBpExtStatus();
-		initializeBtsKKakuteiJLExt();
-		initializeBtscIf0101RenkeiData();
-		initializeBtscIf0102RenkeiData();
-		initializeBtscIf0209RenkeiData();
-		initializeBtscIf0404RenkeiData();
-		initializeBtscKeiyakuCheck();
-		initializeBtscKeiyakuCheckNew();
-		initializeBtsYukoKwhLEigyoExt();
-		initializeBtscYukoKwhMonthLExt();
-		initializeBtscShijisuIf();
-		initializeBtscShijisuChkRes();
-		initializeIf0506();
-		initializeIf0514();
-		initializeBtscKeiyakuErrorInfo();
-		initializeBtscKSijisuJLExt();
-		initializeBtscDoujidoryoFileStatus();
-		initializeBtscIdoInfoList();
-		initializeBtsHikinukiL();
-	}
-
 	public DiffCsv(String expect, String result, String batch, String data, int excludeTargetCol,
 			String excludeTargetValue, boolean showDetail) {
 		this();
@@ -935,14 +905,110 @@ public class DiffCsv {
 	 */
 	private void initializeBtsHikinukiL() {
 		// キーカラム
-		int[] key = { 0,1,2 };
+		int[] key = { 0, 1, 2 };
 		// 数値型カラム
 		Set<Integer> floatSet = new HashSet<Integer>();
 		// 日付型カラム指定
 		Set<Integer> dateSet = new HashSet<Integer>();
 		// 比較除外カラム
-		Integer[] exclude = {  };
+		Integer[] exclude = {};
 		dataAttrMap.put("BTS_HIKINUKI_L", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	/**
+	 * IF0101 IF0101_WATARI ２ファイル対応
+	 */
+	private void initializeIf0101() {
+		// キーカラム
+		int[] key = { 0, 1, 2 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		// 比較除外カラム
+		Integer[] exclude = {};
+		dataAttrMap.put("IF0101", new DataAttr(key, floatSet, dateSet, exclude));
+		dataAttrMap.put("IF0101_WATARI", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	/**
+	 * IF0102
+	 */
+	private void initializeIf0102() {
+		// キーカラム
+		int[] key = { 0, 1, 2 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		// 比較除外カラム
+		Integer[] exclude = {};
+		dataAttrMap.put("IF0102", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	/**
+	 * IF0209
+	 */
+	private void initializeIf0209() {
+		// キーカラム
+		int[] key = { 0, 1, 2 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		// 比較除外カラム
+		Integer[] exclude = {};
+		dataAttrMap.put("IF0209", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	/**
+	 * IF0404
+	 */
+	private void initializeIf0404() {
+		// キーカラム
+		int[] key = { 0, 1, 2 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		// 比較除外カラム
+		Integer[] exclude = {};
+		dataAttrMap.put("IF0404", new DataAttr(key, floatSet, dateSet, exclude));
+		dataAttrMap.put("IF0404_WATARI", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	public DiffCsv() {
+		dataAttrMap = new HashMap<String, DataAttr>();
+
+		initializeBtscYukoKwhLExt();
+		initializeBtsYukoKwhLExt();
+		initializeIf0511();
+		initializeBtscBeforeCalcChkL();
+		initializeBtscBeforeCalcChkLDetail();
+		initializeBtscCalcChkCnt();
+		initializeBtscBpExtStatus();
+		initializeBtsKKakuteiJLExt();
+		initializeBtscIf0101RenkeiData();
+		initializeBtscIf0102RenkeiData();
+		initializeBtscIf0209RenkeiData();
+		initializeBtscIf0404RenkeiData();
+		initializeBtscKeiyakuCheck();
+		initializeBtscKeiyakuCheckNew();
+		initializeBtsYukoKwhLEigyoExt();
+		initializeBtscYukoKwhMonthLExt();
+		initializeBtscShijisuIf();
+		initializeBtscShijisuChkRes();
+		initializeIf0506();
+		initializeIf0514();
+		initializeBtscKeiyakuErrorInfo();
+		initializeBtscKSijisuJLExt();
+		initializeBtscDoujidoryoFileStatus();
+		initializeBtscIdoInfoList();
+		initializeBtsHikinukiL();
+		initializeIf0101();
+		initializeIf0102();
+		initializeIf0209();
+		initializeIf0404();
 	}
 
 	public class DataAttr {
