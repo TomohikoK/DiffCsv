@@ -423,25 +423,6 @@ public class DiffCsvTest {
 	}
 
 	@Test
-	public void testBtscKeiyakuErrorInfo() throws IOException {
-		DiffCsv target = new DiffCsv( //
-				"src/test/resources/com/hoge/btsc_keiyaku_error_info/exp", // -e
-				"src/test/resources/com/hoge/btsc_keiyaku_error_info/res", // -r
-				"btsb004dp", // -b
-				"BTSC_KEIYAKU_ERROR_INFO", // -d
-				0, // -targetCol
-				null, // -targetValue
-				true// -l
-		);
-		target.exec();
-		Assert.assertEquals(296, target.getMatchCount());
-		Assert.assertEquals(22, target.getUnMatchCount());
-		Assert.assertEquals(0, target.getNotFoundResCount());
-		Assert.assertEquals(0, target.getNotFoundExpCount());
-		Assert.assertEquals(203, target.getResDup());
-	}
-
-	@Test
 	public void testBtscKSijisuJLExt() throws IOException {
 		DiffCsv target = new DiffCsv( //
 				"src/test/resources/com/hoge/btsc_k_sijisu_j_l_ext/exp", // -e

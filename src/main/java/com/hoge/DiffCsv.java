@@ -165,6 +165,10 @@ public class DiffCsv {
 					}
 				}
 			}
+			// special rule
+			if ("BTSC_KEIYAKU_ERROR_INFO".equalsIgnoreCase(data)) {
+				tmpList = specialconvbtscKeiyakuErrorInfo(tmpList);
+			}
 			expList.addAll(tmpList);
 		}
 		// 出力結果データ
@@ -182,6 +186,20 @@ public class DiffCsv {
 		logger.info("notFoundRes " + notFoundResCount);
 		logger.info("notFoundExp " + notFoundExpCount);
 		logger.info("resDup " + resDup);
+	}
+
+	private List<String[]> specialconvbtscKeiyakuErrorInfo(List<String[]> tmpList) {
+		Iterator<String[]> it = tmpList.iterator();
+		while (it.hasNext()) {
+			String[] rec = it.next();
+			rec[7] = rec[7].replaceAll("\\s", "");
+			if (rec[7].contains("[")) {
+				rec[7] = rec[7].replace("[", "");
+				rec[7] = rec[7].replace("]", "");
+
+			}
+		}
+		return tmpList;
 	}
 
 	/**
@@ -395,9 +413,15 @@ public class DiffCsv {
 		ArrayList<String[]> resList = new ArrayList<String[]>();
 
 		List<File> resFiles = getNestedFileList(this.result);
+		List<String[]> tmpList = null;
 		for (File file : resFiles) {
 			if (file.getName().endsWith(".csv")) {
-				resList.addAll(readCsvToList(file.getAbsolutePath()));
+				tmpList = readCsvToList(file.getAbsolutePath());
+				// special rule
+				if ("BTSC_KEIYAKU_ERROR_INFO".equalsIgnoreCase(data)) {
+					tmpList = specialconvbtscKeiyakuErrorInfo(tmpList);
+				}
+				resList.addAll(tmpList);
 			}
 		}
 		// 除外
@@ -828,7 +852,7 @@ public class DiffCsv {
 	 */
 	private void initializeBtscKeiyakuErrorInfo() {
 		// キーカラム
-		int[] key = { 3, 4 };
+		int[] key = { 2, 3, 4, 5, 6, 7 };
 		// 数値型カラム
 		Set<Integer> floatSet = new HashSet<Integer>();
 		// 日付型カラム指定
@@ -985,7 +1009,7 @@ public class DiffCsv {
 		int[] key = { 0, 1, 2, 3, 4 };
 		// 数値型カラム
 		Set<Integer> floatSet = new HashSet<Integer>();
-		for(int i=5;i<5+48*2;i=i+2) {
+		for (int i = 5; i < 5 + 48 * 2; i = i + 2) {
 			floatSet.add(i);
 		}
 		// 日付型カラム指定

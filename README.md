@@ -51,4 +51,4 @@
 * IF0404_WATARI key:0,1,2
 11/15
 * IF0505 key:0,1,2,3,4
-
+* 変更：BTSC_KEIYAKU_ERROR_INFO key:2, 3, 4, 5, 6, 7
