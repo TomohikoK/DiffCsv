@@ -977,6 +977,24 @@ public class DiffCsv {
 		dataAttrMap.put("IF0404_WATARI", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
+	/**
+	 * IF0505
+	 */
+	private void initializeIf0505() {
+		// キーカラム
+		int[] key = { 0, 1, 2, 3, 4 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		for(int i=5;i<5+48*2;i=i+2) {
+			floatSet.add(i);
+		}
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		// 比較除外カラム
+		Integer[] exclude = {};
+		dataAttrMap.put("IF0505", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
 	public DiffCsv() {
 		dataAttrMap = new HashMap<String, DataAttr>();
 
@@ -1009,6 +1027,7 @@ public class DiffCsv {
 		initializeIf0102();
 		initializeIf0209();
 		initializeIf0404();
+		initializeIf0505();
 	}
 
 	public class DataAttr {

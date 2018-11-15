@@ -307,8 +307,8 @@ public class DiffCsvTest {
 				true// -l
 		);
 		target.exec();
-		Assert.assertEquals(5826, target.getMatchCount());
-		Assert.assertEquals(2, target.getUnMatchCount());
+		Assert.assertEquals(5110, target.getMatchCount());
+		Assert.assertEquals(718, target.getUnMatchCount());
 		Assert.assertEquals(0, target.getNotFoundResCount());
 		Assert.assertEquals(0, target.getNotFoundExpCount());
 	}
@@ -531,7 +531,7 @@ public class DiffCsvTest {
 		Assert.assertEquals(0, target.getUnMatchCount());
 		Assert.assertEquals(0, target.getNotFoundResCount());
 		Assert.assertEquals(0, target.getNotFoundExpCount());
-		Assert.assertEquals(14, target.getResDup());
+		Assert.assertEquals(0, target.getResDup());
 	}
 
 	@Test
@@ -550,7 +550,7 @@ public class DiffCsvTest {
 		Assert.assertEquals(0, target.getUnMatchCount());
 		Assert.assertEquals(0, target.getNotFoundResCount());
 		Assert.assertEquals(0, target.getNotFoundExpCount());
-		Assert.assertEquals(3, target.getResDup());
+		Assert.assertEquals(0, target.getResDup());
 	}
 
 	@Test
@@ -625,6 +625,25 @@ public class DiffCsvTest {
 		Assert.assertEquals(2, target.getMatchCount());
 		Assert.assertEquals(0, target.getUnMatchCount());
 		Assert.assertEquals(4, target.getNotFoundResCount());
+		Assert.assertEquals(0, target.getNotFoundExpCount());
+		Assert.assertEquals(0, target.getResDup());
+	}
+
+	@Test
+	public void testIf0505() throws IOException {
+		DiffCsv target = new DiffCsv( //
+				"src/test/resources/com/hoge/if0505/exp", // -e
+				"src/test/resources/com/hoge/if0505/res", // -r
+				"btsb004dp", // -b
+				"IF0505", // -d
+				0, // -targetCol
+				null, // -targetValue
+				true// -l
+		);
+		target.exec();
+		Assert.assertEquals(1, target.getMatchCount());
+		Assert.assertEquals(0, target.getUnMatchCount());
+		Assert.assertEquals(0, target.getNotFoundResCount());
 		Assert.assertEquals(0, target.getNotFoundExpCount());
 		Assert.assertEquals(0, target.getResDup());
 	}
