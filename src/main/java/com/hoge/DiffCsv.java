@@ -605,7 +605,7 @@ public class DiffCsv {
 	 * BTSC_BP_EXT_STATUS
 	 */
 	private void initializeBtscBpExtStatus() {
-		int[] key = { 0, 1, 2, 3, 4 };
+		int[] key = { 0, 1, 2, 3 };
 		Set<Integer> floatSet = new HashSet<Integer>();
 		Set<Integer> dateSet = new HashSet<Integer>();
 		Integer[] exclude = { 5, 6, 7, 8 };

@@ -120,5 +120,40 @@ public class DiffCsvTest2 {
 		Assert.assertEquals(5, target.getNotFoundExpCount());
 		Assert.assertEquals(0, target.getResDup());
 	}
+	@Test
+	public void testbtsc_bp_ext_status1() throws IOException {
+		DiffCsv target = new DiffCsv( //
+				"src/test/resources/com/hoge/btsc_bp_ext_status1/exp", // -e
+				"src/test/resources/com/hoge/btsc_bp_ext_status1/res", // -r
+				"btse008dp", // -b
+				"BTSC_BP_EXT_STATUS", // -d
+				0, // -targetCol
+				null, // -targetValue
+				true// -l
+		);
+		target.exec();
+		Assert.assertEquals(570, target.getMatchCount());
+		Assert.assertEquals(0, target.getUnMatchCount());
+		Assert.assertEquals(0, target.getNotFoundResCount());
+		Assert.assertEquals(0, target.getNotFoundExpCount());
+	}
+
+	@Test
+	public void testbtsc_bp_ext_status2() throws IOException {
+		DiffCsv target = new DiffCsv( //
+				"src/test/resources/com/hoge/btsc_bp_ext_status2/exp", // -e
+				"src/test/resources/com/hoge/btsc_bp_ext_status2/res", // -r
+				"btse008dp", // -b
+				"BTSC_BP_EXT_STATUS", // -d
+				0, // -targetCol
+				null, // -targetValue
+				true// -l
+		);
+		target.exec();
+		Assert.assertEquals(570, target.getMatchCount());
+		Assert.assertEquals(0, target.getUnMatchCount());
+		Assert.assertEquals(0, target.getNotFoundResCount());
+		Assert.assertEquals(0, target.getNotFoundExpCount());
+	}
 
 }
