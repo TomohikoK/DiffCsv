@@ -74,29 +74,6 @@ public class DiffCsvTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void testBtscYukoKwhLExt() throws IOException {
-		DiffCsv target = new DiffCsv( //
-				"src/test/resources/com/hoge/btsc_yuko_kwh_l_ext/exp", // -e
-				"src/test/resources/com/hoge/btsc_yuko_kwh_l_ext/res", // -r
-				"btse001dp", // -b
-				"BTSC_YUKO_KWH_L_EXT", // -d
-				110, // -targetCol
-				"BTS-E001", // -targetValue
-				false// -l
-		);
-		target.exec();
-		Assert.assertEquals(3274, target.getMatchCount());
-		Assert.assertEquals(0, target.getUnMatchCount());
-		Assert.assertEquals(0, target.getNotFoundResCount());
-		Assert.assertEquals(253, target.getNotFoundExpCount());
-	}
-
-	/**
-	 * BTSC_YUKO_KWH_L_EXT Test method for {@link com.hoge.DiffCsv#exec()}.
-	 *
-	 * @throws IOException
-	 */
-	@Test
 	public void testIf0511() throws IOException {
 		DiffCsv target = new DiffCsv( //
 				"src/test/resources/com/hoge/if0511/exp", // -e
@@ -315,24 +292,6 @@ public class DiffCsvTest {
 	}
 
 	@Test
-	public void testBtscYukoKwhMonthLExt() throws IOException {
-		DiffCsv target = new DiffCsv( //
-				"src/test/resources/com/hoge/btsc_yuko_kwh_month_l_ext/exp", // -e
-				"src/test/resources/com/hoge/btsc_yuko_kwh_month_l_ext/res", // -r
-				"btsb004dp", // -b
-				"BTSC_YUKO_KWH_MONTH_L_EXT", // -d
-				0, // -targetCol
-				null, // -targetValue
-				true// -l
-		);
-		target.exec();
-		Assert.assertEquals(26, target.getMatchCount());
-		Assert.assertEquals(0, target.getUnMatchCount());
-		Assert.assertEquals(0, target.getNotFoundResCount());
-		Assert.assertEquals(0, target.getNotFoundExpCount());
-	}
-
-	@Test
 	public void testBtsYukoKwhLEigyoExt() throws IOException {
 		DiffCsv target = new DiffCsv( //
 				"src/test/resources/com/hoge/bts_yuko_kwh_l_eigyo_ext/exp", // -e
@@ -345,42 +304,6 @@ public class DiffCsvTest {
 		);
 		target.exec();
 		Assert.assertEquals(2414, target.getMatchCount());
-		Assert.assertEquals(0, target.getUnMatchCount());
-		Assert.assertEquals(0, target.getNotFoundResCount());
-		Assert.assertEquals(0, target.getNotFoundExpCount());
-	}
-
-	@Test
-	public void testBtscShijisuIf() throws IOException {
-		DiffCsv target = new DiffCsv( //
-				"src/test/resources/com/hoge/btsc_shijisu_if/exp", // -e
-				"src/test/resources/com/hoge/btsc_shijisu_if/res", // -r
-				"btsb004dp", // -b
-				"BTSC_SHIJISU_IF", // -d
-				0, // -targetCol
-				null, // -targetValue
-				true// -l
-		);
-		target.exec();
-		Assert.assertEquals(24, target.getMatchCount());
-		Assert.assertEquals(0, target.getUnMatchCount());
-		Assert.assertEquals(0, target.getNotFoundResCount());
-		Assert.assertEquals(0, target.getNotFoundExpCount());
-	}
-
-	@Test
-	public void testBtscShijisuChkRes() throws IOException {
-		DiffCsv target = new DiffCsv( //
-				"src/test/resources/com/hoge/btsc_shijisu_chk_res/exp", // -e
-				"src/test/resources/com/hoge/btsc_shijisu_chk_res/res", // -r
-				"btsb004dp", // -b
-				"BTSC_SHIJISU_CHK_RES", // -d
-				0, // -targetCol
-				null, // -targetValue
-				true// -l
-		);
-		target.exec();
-		Assert.assertEquals(24, target.getMatchCount());
 		Assert.assertEquals(0, target.getUnMatchCount());
 		Assert.assertEquals(0, target.getNotFoundResCount());
 		Assert.assertEquals(0, target.getNotFoundExpCount());

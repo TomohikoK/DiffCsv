@@ -120,8 +120,9 @@ public class DiffCsvTest2 {
 		Assert.assertEquals(5, target.getNotFoundExpCount());
 		Assert.assertEquals(0, target.getResDup());
 	}
+
 	@Test
-	public void testbtsc_bp_ext_status1() throws IOException {
+	public void testBtscBpExtStatus1() throws IOException {
 		DiffCsv target = new DiffCsv( //
 				"src/test/resources/com/hoge/btsc_bp_ext_status1/exp", // -e
 				"src/test/resources/com/hoge/btsc_bp_ext_status1/res", // -r
@@ -140,7 +141,7 @@ public class DiffCsvTest2 {
 	}
 
 	@Test
-	public void testbtsc_bp_ext_status2() throws IOException {
+	public void testBtscBpExtStatus2() throws IOException {
 		DiffCsv target = new DiffCsv( //
 				"src/test/resources/com/hoge/btsc_bp_ext_status2/exp", // -e
 				"src/test/resources/com/hoge/btsc_bp_ext_status2/res", // -r

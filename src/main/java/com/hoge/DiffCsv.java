@@ -196,8 +196,16 @@ public class DiffCsv {
 			if (rec[7].contains("[")) {
 				rec[7] = rec[7].replace("[", "");
 				rec[7] = rec[7].replace("]", "");
-
 			}
+//			if(rec[7].contains("idoKbn")) {
+//				rec[7] = rec[7].replaceAll("idoKbn", "異動区分");
+//			}
+//			if(rec[7].contains("supplyPointNumber")) {
+//				rec[7] = rec[7].replaceAll("supplyPointNumber", "供給地点特定番号");
+//			}
+//			if(rec[16].startsWith("2018-09-06 16")) {
+//				it.remove();
+//			}
 		}
 		return tmpList;
 	}
@@ -227,7 +235,7 @@ public class DiffCsv {
 								System.out.println("match\t" + String.join(DELIMITTER, exp));
 							matchCount++;
 						} else {
-							unMatchCount++;
+//							unMatchCount++;
 						}
 					}
 //					break;
@@ -303,6 +311,7 @@ public class DiffCsv {
 			}
 		}
 		if (!match) {
+			this.unMatchCount++;
 			if (showDetail) {
 				System.out.println("unmatch exp\t" + getDifString(exp, unmatchCol));
 				System.out.println("unmatch res\t" + getDifString(res, unmatchCol));
@@ -714,7 +723,7 @@ public class DiffCsv {
 		dateSet.add(9);
 		dateSet.add(10);
 		// 比較除外カラム
-		Integer[] exclude = { 2, 14, 15, 16, 17 };
+		Integer[] exclude = { 1, 2, 14, 15, 16, 17 };
 		dataAttrMap.put("BTSC_KEIYAKU_CHECK", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
@@ -792,7 +801,9 @@ public class DiffCsv {
 		dateSet.add(19);
 		dateSet.add(20);
 		// 比較除外カラム
-		Integer[] exclude = { 26, 27, 28, 29 };
+		Integer[] exclude = { 22, 23, 24, 25
+//				,26,27,28,29
+		};
 		dataAttrMap.put("BTSC_SHIJISU_IF", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
@@ -1019,6 +1030,21 @@ public class DiffCsv {
 		dataAttrMap.put("IF0505", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
+	/**
+	 * BTSC_INFOMATION btscInfomation btsc_infomation
+	 */
+	private void initializeBtscInfomation() {
+		// キーカラム
+		int[] key = { 0, 1, 2 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		// 比較除外カラム
+		Integer[] exclude = { 3, 4, 5, 6 };
+		dataAttrMap.put("BTSC_INFOMATION", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
 	public DiffCsv() {
 		dataAttrMap = new HashMap<String, DataAttr>();
 
@@ -1052,6 +1078,7 @@ public class DiffCsv {
 		initializeIf0209();
 		initializeIf0404();
 		initializeIf0505();
+		initializeBtscInfomation();
 	}
 
 	public class DataAttr {
