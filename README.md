@@ -44,7 +44,7 @@
 * BTSC_IDO_INFO_LIST key:1, 2, 3, 4, 5, 6, 7
 * BTS_HIKINUKI_L key:0, 1, 2
 * IF0101 key:0,1,2
-* IF0101_WATARI key:0,1,2
+* IF0101_WATARI key:0,1,2s
 * IF0102 key:0,1,2
 * IF0209 key:0,1,2
 * IF0404 key:0,1,2
@@ -52,3 +52,6 @@
 11/15
 * IF0505 key:0,1,2,3,4
 * 変更：BTSC_KEIYAKU_ERROR_INFO key:2, 3, 4, 5, 6, 7
+11/20
+* 変更 BTSC_IDO_INFO_LIST key:1 - 17
+

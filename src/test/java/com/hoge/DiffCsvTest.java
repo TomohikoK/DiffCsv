@@ -357,10 +357,12 @@ public class DiffCsvTest {
 				true// -l
 		);
 		target.exec();
-		Assert.assertEquals(47, target.getMatchCount());
-		Assert.assertEquals(121, target.getUnMatchCount());
+		Assert.assertEquals(0, target.getMatchCount());
+		Assert.assertEquals(168, target.getUnMatchCount());
 		Assert.assertEquals(0, target.getNotFoundResCount());
 		Assert.assertEquals(0, target.getNotFoundExpCount());
+		Assert.assertEquals(0, target.getExpDup());
+		Assert.assertEquals(0, target.getResDup());
 	}
 
 	@Test
@@ -376,9 +378,30 @@ public class DiffCsvTest {
 		);
 		target.exec();
 		Assert.assertEquals(0, target.getMatchCount());
-		Assert.assertEquals(20, target.getUnMatchCount());
-		Assert.assertEquals(10, target.getNotFoundResCount());
+		Assert.assertEquals(0, target.getUnMatchCount());
+		Assert.assertEquals(30, target.getNotFoundResCount());
+		Assert.assertEquals(14, target.getNotFoundExpCount());
+		Assert.assertEquals(0, target.getExpDup());
+		Assert.assertEquals(0, target.getResDup());
+	}
+
+	@Test
+	public void testBtscIdoInfoList2() throws IOException {
+		DiffCsv target = new DiffCsv( //
+				"src/test/resources/com/hoge/btsc_ido_info_list2/exp", // -e
+				"src/test/resources/com/hoge/btsc_ido_info_list2/res", // -r
+				"btsb004dp", // -b
+				"BTSC_IDO_INFO_LIST", // -d
+				0, // -targetCol
+				null, // -targetValue
+				true// -l
+		);
+		target.exec();
+		Assert.assertEquals(29, target.getMatchCount());
+		Assert.assertEquals(0, target.getUnMatchCount());
+		Assert.assertEquals(1, target.getNotFoundResCount());
 		Assert.assertEquals(0, target.getNotFoundExpCount());
+		Assert.assertEquals(0, target.getExpDup());
 		Assert.assertEquals(0, target.getResDup());
 	}
 

@@ -36,6 +36,7 @@ public class DiffCsv {
 	static private Logger logger = LoggerFactory.getLogger(DiffCsv.class);
 	static private String DELIMITTER = "\t";
 	static private SimpleDateFormat SDF10 = new SimpleDateFormat("yyyy-MM-dd");
+	static private SimpleDateFormat SDF14 = new SimpleDateFormat("yyyyMMddHHmmSS");
 	static private SimpleDateFormat SDF19 = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
 	static private SimpleDateFormat SDF26 = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS.ssssss");
 	private boolean showDetail;
@@ -247,7 +248,7 @@ public class DiffCsv {
 					if (found) {
 						// 重複
 						System.out.println("dup res\t" + String.join(DELIMITTER, res));
-						this.resDup++;
+						this.resDupCount++;
 					} else {
 						found = true;
 						if (compareData(exp, res)) {
@@ -417,7 +418,7 @@ public class DiffCsv {
 	 * @param dat
 	 * @return
 	 */
-	private String getKeyStr(String[] dat) {
+	private String getKeyStrold(String[] dat) {
 		StringBuffer key = new StringBuffer();
 		int[] keiCols = dataAttrMap.get(data).keyCols;
 		for (int i = 0; i < keiCols.length; i++) {
@@ -426,6 +427,28 @@ public class DiffCsv {
 		return key.toString();
 	}
 
+	private String getKeyStr(String[] dat) {
+		StringBuffer key = new StringBuffer();
+		int[] kCols = dataAttrMap.get(data).keyCols;
+		boolean containDate = false;
+		for (int i = 0; i < kCols.length; i++) {
+			String keyData = "";
+			// 日付のときはDate.toStringに変換
+			if (dataAttrMap.get(data).dateCheckSet.contains(kCols[i])) {
+				containDate = true;
+				keyData = parseDate(dat[kCols[i]]) != null ?
+						SDF14.format(parseDate(dat[kCols[i]])).trim() : "";
+			} else {
+				keyData = dat[kCols[i]];
+			}
+			key.append(keyData);
+		}
+		if(containDate)
+			logger.debug("key = " +key.toString());
+		return key.toString().trim();
+	}
+
+//if (dataAttrMap.get(data).dateCheckSet.contains(i)) {
 	/**
 	 * 複数の結果ファイルを１つのコレクションを作成。
 	 *
@@ -934,31 +957,11 @@ public class DiffCsv {
 		dataAttrMap.put("BTSC_DOUJIDORYO_FILE_STATUS", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
-	/**
-	 * BTSC_IDO_INFO_LIST key=1,2,3,4,5,6,7 col=0 がシーケンスで一致しないときに使用。
-	 */
-	private void initializeBtscIdoInfoList() {
-		// キーカラム
-		int[] key = { 1, 2, 3, 4, 5, 6, 7 };
-		// 数値型カラム
-		Set<Integer> floatSet = new HashSet<Integer>();
-		floatSet.add(8);
-		floatSet.add(12);
-		// 日付型カラム指定
-		Set<Integer> dateSet = new HashSet<Integer>();
-		dateSet.add(9);
-		dateSet.add(10);
-		dateSet.add(11);
-		dateSet.add(17);
-		// 比較除外カラム
-		Integer[] exclude = { 0, 18, 19, 20, 21 };
-		dataAttrMap.put("BTSC_IDO_INFO_LIST", new DataAttr(key, floatSet, dateSet, exclude));
-	}
 
 	/**
-	 * BTSC_IDO_INFO_LIST2 key=0 col=0 がシーケンスで一致するときに使用。
+	 * BTSC_IDO_INFO_LIST2 key=0 col=1-17 がシーケンスで一致するときに使用。
 	 */
-	private void initializeBtscIdoInfoList2() {
+	private void initializeBtscIdoInfoList() {
 		// キーカラム
 		int[] key = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 };
 		// 数値型カラム
@@ -973,7 +976,7 @@ public class DiffCsv {
 		dateSet.add(17);
 		// 比較除外カラム
 		Integer[] exclude = { 0, 18, 19, 20, 21 };
-		dataAttrMap.put("BTSC_IDO_INFO_LIST2", new DataAttr(key, floatSet, dateSet, exclude));
+		dataAttrMap.put("BTSC_IDO_INFO_LIST", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
 	/**
@@ -1113,7 +1116,6 @@ public class DiffCsv {
 		initializeBtscKSijisuJLExt();
 		initializeBtscDoujidoryoFileStatus();
 		initializeBtscIdoInfoList();
-		initializeBtscIdoInfoList2();
 		initializeBtsHikinukiL();
 		initializeIf0101();
 		initializeIf0102();
