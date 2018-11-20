@@ -443,8 +443,8 @@ public class DiffCsv {
 			}
 			key.append(keyData);
 		}
-		if(containDate)
-			logger.debug("key = " +key.toString());
+//		if(containDate)
+//			logger.debug("key = " +key.toString());
 		return key.toString().trim();
 	}
 
