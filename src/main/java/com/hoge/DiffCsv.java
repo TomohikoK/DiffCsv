@@ -9,6 +9,8 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -50,7 +52,8 @@ public class DiffCsv {
 	private int notFoundResCount;
 	private int matchCount;
 	private int notFoundExpCount;
-	private int resDup;
+	private int resDupCount;
+	private int expDupCount;
 
 	public static void main(String[] args) throws ParseException {
 		logger.info("start...");
@@ -171,6 +174,10 @@ public class DiffCsv {
 			}
 			expList.addAll(tmpList);
 		}
+		// key順にソート
+		Collections.sort(expList, new RecComparator());
+		// 重複キーチェック
+		checkDuplicate(expList);
 		// 出力結果データ
 		List<String[]> resList = generateResultData();
 //		resList.stream().forEach(s->System.out.println(String.join(",",s)));
@@ -185,7 +192,20 @@ public class DiffCsv {
 		logger.info("unmatch  " + unMatchCount);
 		logger.info("notFoundRes " + notFoundResCount);
 		logger.info("notFoundExp " + notFoundExpCount);
-		logger.info("resDup " + resDup);
+		logger.info("expDup " + expDupCount);
+		logger.info("resDup " + resDupCount);
+	}
+
+	private void checkDuplicate(List<String[]> recList) {
+		Set<String> keySet = new HashSet<String>();
+		for (String[] rec : recList) {
+			if (!keySet.contains(getKeyStr(rec))) {
+				keySet.add(getKeyStr(rec));
+			} else {
+				System.out.println("expDup\t" + String.join(DELIMITTER, rec));
+				expDupCount++;
+			}
+		}
 	}
 
 	private List<String[]> specialconvbtscKeiyakuErrorInfo(List<String[]> tmpList) {
@@ -366,12 +386,6 @@ public class DiffCsv {
 			return null;
 		}
 	}
-//		try {
-//			return Date.parse(dat);
-//		} catch (NumberFormatException nfe) {
-//			return 0f;
-//		}
-//	}
 
 	/**
 	 * 差異のある項目を[]で括って１レコードの全項目を文字列化。
@@ -523,8 +537,12 @@ public class DiffCsv {
 		return notFoundExpCount;
 	}
 
+	public int getExpDup() {
+		return expDupCount;
+	}
+
 	public int getResDup() {
-		return resDup;
+		return resDupCount;
 	}
 
 	/**
@@ -775,6 +793,7 @@ public class DiffCsv {
 		}
 		// 日付型カラム指定
 		Set<Integer> dateSet = new HashSet<Integer>();
+		dateSet.add(1);
 		dateSet.add(18);
 		dateSet.add(19);
 		// 比較除外カラム
@@ -864,6 +883,7 @@ public class DiffCsv {
 	private void initializeBtscKeiyakuErrorInfo() {
 		// キーカラム
 		int[] key = { 2, 3, 4, 5, 6, 7 };
+//		int[] key = { 2, 3, 7 };
 		// 数値型カラム
 		Set<Integer> floatSet = new HashSet<Integer>();
 		// 日付型カラム指定
@@ -898,7 +918,7 @@ public class DiffCsv {
 	 */
 	private void initializeBtscDoujidoryoFileStatus() {
 		// キーカラム
-		int[] key = { 0, 2, 3 };
+		int[] key = { 0, 1, 2, 3 };
 		// 数値型カラム
 		Set<Integer> floatSet = new HashSet<Integer>();
 		for (int i = 4; i < 8; i++) {
@@ -910,12 +930,12 @@ public class DiffCsv {
 		dateSet.add(1);
 		dateSet.add(8);
 		// 比較除外カラム
-		Integer[] exclude = { 8, 11, 12, 13, 14, 15 };
+		Integer[] exclude = { 11, 12, 13, 14, 15 };
 		dataAttrMap.put("BTSC_DOUJIDORYO_FILE_STATUS", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
 	/**
-	 * BTSC_IDO_INFO_LIST
+	 * BTSC_IDO_INFO_LIST key=1,2,3,4,5,6,7 col=0 がシーケンスで一致しないときに使用。
 	 */
 	private void initializeBtscIdoInfoList() {
 		// キーカラム
@@ -933,6 +953,27 @@ public class DiffCsv {
 		// 比較除外カラム
 		Integer[] exclude = { 0, 18, 19, 20, 21 };
 		dataAttrMap.put("BTSC_IDO_INFO_LIST", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	/**
+	 * BTSC_IDO_INFO_LIST2 key=0 col=0 がシーケンスで一致するときに使用。
+	 */
+	private void initializeBtscIdoInfoList2() {
+		// キーカラム
+		int[] key = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		floatSet.add(8);
+		floatSet.add(12);
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		dateSet.add(9);
+		dateSet.add(10);
+		dateSet.add(11);
+		dateSet.add(17);
+		// 比較除外カラム
+		Integer[] exclude = { 0, 18, 19, 20, 21 };
+		dataAttrMap.put("BTSC_IDO_INFO_LIST2", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
 	/**
@@ -1072,6 +1113,7 @@ public class DiffCsv {
 		initializeBtscKSijisuJLExt();
 		initializeBtscDoujidoryoFileStatus();
 		initializeBtscIdoInfoList();
+		initializeBtscIdoInfoList2();
 		initializeBtsHikinukiL();
 		initializeIf0101();
 		initializeIf0102();
@@ -1107,4 +1149,13 @@ public class DiffCsv {
 			this.excludeCols = Arrays.asList(excludeCols);
 		}
 	}
+
+	public class RecComparator implements Comparator<String[]> {
+
+		@Override
+		public int compare(String[] rec1, String[] rec2) {
+			return getKeyStr(rec1).compareTo(getKeyStr(rec1));
+		}
+	}
+
 }
