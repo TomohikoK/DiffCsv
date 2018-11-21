@@ -54,4 +54,5 @@
 * 変更：BTSC_KEIYAKU_ERROR_INFO key:2, 3, 4, 5, 6, 7
 11/20
 * 変更 BTSC_IDO_INFO_LIST key:1 - 17
-
+11/22
+* 追加 BTSC_PF_LIST key:0, 2, 3, 4, 6, 7, 8, 9, 11

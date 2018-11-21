@@ -197,7 +197,7 @@ public class DiffCsvTest {
 		Assert.assertEquals(0, target.getUnMatchCount());
 		Assert.assertEquals(0, target.getNotFoundResCount());
 		Assert.assertEquals(0, target.getNotFoundExpCount());
-		Assert.assertEquals(143, target.getResDup());
+		Assert.assertEquals(0, target.getResDup());
 	}
 
 	@Test
@@ -285,9 +285,10 @@ public class DiffCsvTest {
 		);
 		target.exec();
 		Assert.assertEquals(703, target.getMatchCount());
-		Assert.assertEquals(124, target.getUnMatchCount());
-		Assert.assertEquals(985, target.getNotFoundResCount());
-		Assert.assertEquals(2, target.getNotFoundExpCount());
+		Assert.assertEquals(34, target.getUnMatchCount());
+		Assert.assertEquals(1075, target.getNotFoundResCount());
+		Assert.assertEquals(80, target.getNotFoundExpCount());
+		Assert.assertEquals(13, target.getExpDup());
 		Assert.assertEquals(0, target.getResDup());
 	}
 
@@ -554,6 +555,26 @@ public class DiffCsvTest {
 		Assert.assertEquals(0, target.getUnMatchCount());
 		Assert.assertEquals(0, target.getNotFoundResCount());
 		Assert.assertEquals(0, target.getNotFoundExpCount());
+		Assert.assertEquals(0, target.getResDup());
+	}
+
+	@Test
+	public void testBtscPfList() throws IOException {
+		DiffCsv target = new DiffCsv( //
+				"src/test/resources/com/hoge/btsc_pf_list/exp", // -e
+				"src/test/resources/com/hoge/btsc_pf_list/res", // -r
+				"btse003dp", // -b
+				"BTSC_PF_LIST", // -d
+				0, // -targetCol
+				null, // -targetValue
+				true// -l
+		);
+		target.exec();
+		Assert.assertEquals(4, target.getMatchCount());
+		Assert.assertEquals(0, target.getUnMatchCount());
+		Assert.assertEquals(42, target.getNotFoundResCount());
+		Assert.assertEquals(4, target.getNotFoundExpCount());
+		Assert.assertEquals(0, target.getExpDup());
 		Assert.assertEquals(0, target.getResDup());
 	}
 
