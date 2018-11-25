@@ -446,7 +446,7 @@ public class DiffCsv {
 			// 日付のときはDate.toStringに変換
 			if (dataAttrMap.get(data).dateCheckSet.contains(kCols[i])) {
 				containDate = true;
-				keyData = parseDate(dat[kCols[i]]) != null ? SDF14.format(parseDate(dat[kCols[i]])).trim() : "";
+				keyData = parseDate(dat[kCols[i]]) != null ? SDF14.format(parseDate(dat[kCols[i]])) : "";
 			} else {
 				keyData = dat[kCols[i]];
 			}
@@ -529,9 +529,10 @@ public class DiffCsv {
 		while ((nextLine = reader.readNext()) != null) {
 			// スラッシュ日付をハイフン日付に変換
 			for (int i = 0; i < nextLine.length; i++) {
-				if (nextLine[i].matches("[0-9]{4}/[0-9]{2}/[0-9]{2}")) {
-					nextLine[i] = nextLine[i].replaceAll("([0-9]{4})/([0-9]{2})/([0-9]{2})", "$1-$2-$3");
-				}
+				nextLine[i] = nextLine[i].trim();
+//				if (nextLine[i].matches("[0-9]{4}/[0-9]{2}/[0-9]{2}")) {
+//					nextLine[i] = nextLine[i].replaceAll("([0-9]{4})/([0-9]{2})/([0-9]{2})", "$1-$2-$3");
+//				}
 			}
 			// 読み込んだCSVレコードを戻り値リストへ追加。
 			retList.add(nextLine);
@@ -693,7 +694,8 @@ public class DiffCsv {
 		int[] key = { 2, 3, 4, 5, 6 };
 		// 数値型カラム
 		Set<Integer> floatSet = new HashSet<Integer>();
-		for (int i = 10; i < 12; i++) {
+		floatSet.add(8);
+		for (int i = 10; i < 13; i++) {
 			floatSet.add(i);
 		}
 		for (int i = 16; i < 25; i++) {
@@ -748,7 +750,7 @@ public class DiffCsv {
 	 */
 	private void initializeBtscIf0404RenkeiData() {
 		// キーカラム
-		int[] key = { 9 };
+		int[] key = { 9,2 };
 		// 数値型カラム
 		Set<Integer> floatSet = new HashSet<Integer>();
 		// 日付型カラム指定

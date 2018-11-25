@@ -121,10 +121,12 @@ public class DiffCsvTest {
 				true// -l
 		);
 		target.exec();
-		Assert.assertEquals(44, target.getMatchCount());
-		Assert.assertEquals(6, target.getUnMatchCount());
-		Assert.assertEquals(1, target.getNotFoundResCount());
-		Assert.assertEquals(1, target.getNotFoundExpCount());
+		Assert.assertEquals(50, target.getMatchCount());
+		Assert.assertEquals(1, target.getUnMatchCount());
+		Assert.assertEquals(0, target.getNotFoundResCount());
+		Assert.assertEquals(0, target.getNotFoundExpCount());
+		Assert.assertEquals(0, target.getExpDup());
+		Assert.assertEquals(0, target.getResDup());
 	}
 
 	@Test
@@ -197,6 +199,27 @@ public class DiffCsvTest {
 		Assert.assertEquals(0, target.getUnMatchCount());
 		Assert.assertEquals(0, target.getNotFoundResCount());
 		Assert.assertEquals(0, target.getNotFoundExpCount());
+		Assert.assertEquals(1, target.getExpDup());
+		Assert.assertEquals(0, target.getResDup());
+	}
+
+	@Test
+	public void testBtscIf0101RenkeiData2() throws IOException {
+		DiffCsv target = new DiffCsv( //
+				"src/test/resources/com/hoge/btsc_if0101_renkei_data2/exp", // -e
+				"src/test/resources/com/hoge/btsc_if0101_renkei_data2/res", // -r
+				"btsb004dp", // -b
+				"BTSC_IF0101_RENKEI_DATA", // -d
+				0, // -targetCol
+				null, // -targetValue
+				true// -l
+		);
+		target.exec();
+		Assert.assertEquals(327, target.getMatchCount());
+		Assert.assertEquals(0, target.getUnMatchCount());
+		Assert.assertEquals(0, target.getNotFoundResCount());
+		Assert.assertEquals(0, target.getNotFoundExpCount());
+		Assert.assertEquals(0, target.getExpDup());
 		Assert.assertEquals(0, target.getResDup());
 	}
 
@@ -255,6 +278,26 @@ public class DiffCsvTest {
 	}
 
 	@Test
+	public void testBtscIf0404RenkeiData2() throws IOException {
+		DiffCsv target = new DiffCsv( //
+				"src/test/resources/com/hoge/btsc_if0404_renkei_data2/exp", // -e
+				"src/test/resources/com/hoge/btsc_if0404_renkei_data2/res", // -r
+				"btsb004dp", // -b
+				"BTSC_IF0404_RENKEI_DATA", // -d
+				0, // -targetCol
+				null, // -targetValue
+				true// -l
+		);
+		target.exec();
+		Assert.assertEquals(1421, target.getMatchCount());
+		Assert.assertEquals(0, target.getUnMatchCount());
+		Assert.assertEquals(0, target.getNotFoundResCount());
+		Assert.assertEquals(0, target.getNotFoundExpCount());
+		Assert.assertEquals(0, target.getExpDup());
+		Assert.assertEquals(0, target.getResDup());
+	}
+
+	@Test
 	public void testBtscKeiyakuCheck() throws IOException {
 		DiffCsv target = new DiffCsv( //
 				"src/test/resources/com/hoge/btsc_keiyaku_check/exp", // -e
@@ -284,10 +327,10 @@ public class DiffCsvTest {
 				true// -l
 		);
 		target.exec();
-		Assert.assertEquals(703, target.getMatchCount());
+		Assert.assertEquals(705, target.getMatchCount());
 		Assert.assertEquals(34, target.getUnMatchCount());
-		Assert.assertEquals(1075, target.getNotFoundResCount());
-		Assert.assertEquals(80, target.getNotFoundExpCount());
+		Assert.assertEquals(1073, target.getNotFoundResCount());
+		Assert.assertEquals(78, target.getNotFoundExpCount());
 		Assert.assertEquals(13, target.getExpDup());
 		Assert.assertEquals(0, target.getResDup());
 	}
