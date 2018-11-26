@@ -676,7 +676,7 @@ public class DiffCsv {
 	 * BTS_K_KAKUTEI_J_L_EXT
 	 */
 	private void initializeBtsKKakuteiJLExt() {
-		int[] key = { 1, 3, 4 };
+		int[] key = { 0, 1, 2, 3, 4 };
 		Set<Integer> floatSet = new HashSet<Integer>();
 		for (int i = 5; i < 27; i++) {
 			floatSet.add(i);
@@ -750,7 +750,7 @@ public class DiffCsv {
 	 */
 	private void initializeBtscIf0404RenkeiData() {
 		// キーカラム
-		int[] key = { 9,2 };
+		int[] key = { 9, 2 };
 		// 数値型カラム
 		Set<Integer> floatSet = new HashSet<Integer>();
 		// 日付型カラム指定

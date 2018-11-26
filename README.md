@@ -56,3 +56,5 @@
 * 変更 BTSC_IDO_INFO_LIST key:1 - 17
 11/22
 * 追加 BTSC_PF_LIST key:0, 2, 3, 4, 6, 7, 8, 9, 11
+11/27
+* 変更 BTS_K_KAKUTEI_J_L_EXT key:0,1,2,3,4

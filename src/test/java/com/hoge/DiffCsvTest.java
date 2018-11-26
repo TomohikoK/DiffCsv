@@ -177,10 +177,32 @@ public class DiffCsvTest {
 				true// -l
 		);
 		target.exec();
-		Assert.assertEquals(512, target.getMatchCount());
-		Assert.assertEquals(57, target.getUnMatchCount());
+		Assert.assertEquals(569, target.getMatchCount());
+		Assert.assertEquals(0, target.getUnMatchCount());
 		Assert.assertEquals(0, target.getNotFoundResCount());
 		Assert.assertEquals(0, target.getNotFoundExpCount());
+		Assert.assertEquals(0, target.getExpDup());
+		Assert.assertEquals(0, target.getResDup());
+	}
+
+	@Test
+	public void testBtsKKakuteiJLExt2() throws IOException {
+		DiffCsv target = new DiffCsv( //
+				"src/test/resources/com/hoge/bts_k_kakutei_j_l_ext2/exp", // -e
+				"src/test/resources/com/hoge/bts_k_kakutei_j_l_ext2/res", // -r
+				"btse004dp", // -b
+				"BTS_K_KAKUTEI_J_L_EXT", // -d
+				0, // -targetCol
+				null, // -targetValue
+				true// -l
+		);
+		target.exec();
+		Assert.assertEquals(606, target.getMatchCount());
+		Assert.assertEquals(6, target.getUnMatchCount());
+		Assert.assertEquals(69, target.getNotFoundResCount());
+		Assert.assertEquals(0, target.getNotFoundExpCount());
+		Assert.assertEquals(0, target.getExpDup());
+		Assert.assertEquals(0, target.getResDup());
 	}
 
 	@Test
