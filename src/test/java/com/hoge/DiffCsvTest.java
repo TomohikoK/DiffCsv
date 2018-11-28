@@ -82,7 +82,7 @@ public class DiffCsvTest {
 				"IF0511", // -d
 				110, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(16, target.getMatchCount());
@@ -100,7 +100,7 @@ public class DiffCsvTest {
 				"IF0506", // -d
 				110, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(7, target.getMatchCount());
@@ -118,7 +118,7 @@ public class DiffCsvTest {
 				"BTSC_BEFORE_CALC_CHK_L", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(50, target.getMatchCount());
@@ -138,7 +138,7 @@ public class DiffCsvTest {
 				"BTSC_BEFORE_CALC_CHK_L_DETAIL", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(582, target.getMatchCount());
@@ -156,7 +156,7 @@ public class DiffCsvTest {
 				"BTSC_CALC_CHK_CNT", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(1, target.getMatchCount());
@@ -174,7 +174,7 @@ public class DiffCsvTest {
 				"BTS_K_KAKUTEI_J_L_EXT", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(569, target.getMatchCount());
@@ -194,7 +194,7 @@ public class DiffCsvTest {
 				"BTS_K_KAKUTEI_J_L_EXT", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(606, target.getMatchCount());
@@ -214,7 +214,7 @@ public class DiffCsvTest {
 				"BTSC_IF0101_RENKEI_DATA", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(2666, target.getMatchCount());
@@ -234,7 +234,7 @@ public class DiffCsvTest {
 				"BTSC_IF0101_RENKEI_DATA", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(327, target.getMatchCount());
@@ -254,7 +254,7 @@ public class DiffCsvTest {
 				"BTSC_IF0102_RENKEI_DATA", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(415, target.getMatchCount());
@@ -272,7 +272,7 @@ public class DiffCsvTest {
 				"BTSC_IF0209_RENKEI_DATA", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(102, target.getMatchCount());
@@ -290,7 +290,7 @@ public class DiffCsvTest {
 				"BTSC_IF0404_RENKEI_DATA", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(260, target.getMatchCount());
@@ -308,7 +308,7 @@ public class DiffCsvTest {
 				"BTSC_IF0404_RENKEI_DATA", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(1421, target.getMatchCount());
@@ -328,7 +328,7 @@ public class DiffCsvTest {
 				"BTSC_KEIYAKU_CHECK", // -d
 				16, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(5110, target.getMatchCount());
@@ -346,14 +346,14 @@ public class DiffCsvTest {
 				"BTSC_KEIYAKU_CHECK_NEW", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(705, target.getMatchCount());
-		Assert.assertEquals(34, target.getUnMatchCount());
-		Assert.assertEquals(1073, target.getNotFoundResCount());
-		Assert.assertEquals(78, target.getNotFoundExpCount());
-		Assert.assertEquals(13, target.getExpDup());
+		Assert.assertEquals(0, target.getUnMatchCount());
+		Assert.assertEquals(1107, target.getNotFoundResCount());
+		Assert.assertEquals(99, target.getNotFoundExpCount());
+		Assert.assertEquals(0, target.getExpDup());
 		Assert.assertEquals(0, target.getResDup());
 	}
 
@@ -366,7 +366,7 @@ public class DiffCsvTest {
 				"BTS_YUKO_KWH_L_EIGYO_EXT", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(2414, target.getMatchCount());
@@ -384,7 +384,7 @@ public class DiffCsvTest {
 				"IF0514", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(7, target.getMatchCount());
@@ -402,7 +402,7 @@ public class DiffCsvTest {
 				"BTSC_K_SIJISU_J_L_EXT", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(8, target.getMatchCount());
@@ -420,7 +420,7 @@ public class DiffCsvTest {
 				"BTSC_DOUJIDORYO_FILE_STATUS", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(0, target.getMatchCount());
@@ -440,7 +440,7 @@ public class DiffCsvTest {
 				"BTSC_IDO_INFO_LIST", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(0, target.getMatchCount());
@@ -460,7 +460,7 @@ public class DiffCsvTest {
 				"BTSC_IDO_INFO_LIST", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(29, target.getMatchCount());
@@ -480,7 +480,7 @@ public class DiffCsvTest {
 				"BTS_HIKINUKI_L", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(31, target.getMatchCount());
@@ -499,7 +499,7 @@ public class DiffCsvTest {
 				"IF0101", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(21, target.getMatchCount());
@@ -518,7 +518,7 @@ public class DiffCsvTest {
 				"IF0101_WATARI", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(6, target.getMatchCount());
@@ -537,7 +537,7 @@ public class DiffCsvTest {
 				"IF0102", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(5, target.getMatchCount());
@@ -556,7 +556,7 @@ public class DiffCsvTest {
 				"IF0209", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(1, target.getMatchCount());
@@ -575,7 +575,7 @@ public class DiffCsvTest {
 				"IF0404", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(7, target.getMatchCount());
@@ -594,7 +594,7 @@ public class DiffCsvTest {
 				"IF0404_WATARI", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(2, target.getMatchCount());
@@ -613,7 +613,7 @@ public class DiffCsvTest {
 				"IF0505", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(1, target.getMatchCount());
@@ -632,7 +632,7 @@ public class DiffCsvTest {
 				"BTSC_PF_LIST", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(4, target.getMatchCount());

@@ -54,7 +54,7 @@ public class DiffCsvTest2 {
 				"BTSC_KEIYAKU_ERROR_INFO", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(317, target.getMatchCount());
@@ -73,7 +73,7 @@ public class DiffCsvTest2 {
 				"BTSC_KEIYAKU_ERROR_INFO", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(440, target.getMatchCount());
@@ -92,7 +92,7 @@ public class DiffCsvTest2 {
 				"BTSC_KEIYAKU_ERROR_INFO", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(102, target.getMatchCount());
@@ -111,7 +111,7 @@ public class DiffCsvTest2 {
 				"BTSC_KEIYAKU_ERROR_INFO", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(262, target.getMatchCount());
@@ -130,7 +130,7 @@ public class DiffCsvTest2 {
 				"BTSC_BP_EXT_STATUS", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(570, target.getMatchCount());
@@ -149,7 +149,7 @@ public class DiffCsvTest2 {
 				"BTSC_BP_EXT_STATUS", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(1, target.getMatchCount());
@@ -168,7 +168,7 @@ public class DiffCsvTest2 {
 				"BTSC_DOUJIDORYO_FILE_STATUS", // -d
 				0, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(0, target.getMatchCount());

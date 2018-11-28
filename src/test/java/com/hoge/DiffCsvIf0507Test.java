@@ -17,7 +17,7 @@ import org.junit.Test;
  *
  */
 public class DiffCsvIf0507Test {
-	static boolean LOG_OUT = true;
+	static boolean LOG_OUT = false;
 
 	/**
 	 * @throws java.lang.Exception

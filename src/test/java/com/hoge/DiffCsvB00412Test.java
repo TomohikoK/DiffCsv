@@ -55,7 +55,7 @@ public class DiffCsvB00412Test {
 				16, // -targetCol
 //				"BTS_B004", // -targetValue
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(1664, target.getMatchCount());
@@ -74,7 +74,7 @@ public class DiffCsvB00412Test {
 				"BTSC_KEIYAKU_ERROR_INFO", // -d
 				15, // -targetCol
 				null, // -targetValue
-				true// -l
+				false// -l
 		);
 		target.exec();
 		Assert.assertEquals(458, target.getMatchCount());
