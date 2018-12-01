@@ -420,11 +420,11 @@ public class DiffCsvTest {
 				"BTSC_DOUJIDORYO_FILE_STATUS", // -d
 				0, // -targetCol
 				null, // -targetValue
-				false// -l
+				true// -l
 		);
 		target.exec();
-		Assert.assertEquals(0, target.getMatchCount());
-		Assert.assertEquals(168, target.getUnMatchCount());
+		Assert.assertEquals(168, target.getMatchCount());
+		Assert.assertEquals(0, target.getUnMatchCount());
 		Assert.assertEquals(0, target.getNotFoundResCount());
 		Assert.assertEquals(0, target.getNotFoundExpCount());
 		Assert.assertEquals(0, target.getExpDup());

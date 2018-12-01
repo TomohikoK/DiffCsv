@@ -55,8 +55,8 @@ public class DiffTxtTest {
 	@Test
 	public final void testMain() {
 		String[] testParam = { //
-				"-e", "/Users/nakazawasugio/qd-bts/tmp/btsh001dp/OUT/halfTime", //
-				"-r", "/Users/nakazawasugio/qd-bts/tmp/btsh001dp/tmp/btsh_hulft_update_file_source", //
+				"-e", "src/test/resources/com/hoge/DiffTxt/update/exp", //
+				"-r", "src/test/resources/com/hoge/DiffTxt/update/res", //
 				"-d", "update", //
 				"-l", "false", //
 		};
@@ -74,8 +74,8 @@ public class DiffTxtTest {
 	@Test
 	public final void testExec() {
 		DiffTxt target = new DiffTxt(
-				"/Users/nakazawasugio/qd-bts/tmp/btsh001dp/OUT/halfTime", //
-				"/Users/nakazawasugio/qd-bts/tmp/btsh001dp/tmp/btsh_hulft_update_file_source", //
+				"src/test/resources/com/hoge/DiffTxt/update/exp", //
+				"src/test/resources/com/hoge/DiffTxt/update/res", //
 				"update", //
 				true
 				);

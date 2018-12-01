@@ -164,7 +164,7 @@ public class DiffTxt {
 							String asksFileName = expRec[0] + "/" + expRec[2] + "/" + expRec[3].substring(0, 6);
 							if (resRec[6].startsWith(asksFileName)) {
 								// ファイル存在確認
-								File tmp = new File(this.result + "/../../result/doujidoryo_half_time/"
+								File tmp = new File(this.result + "/../res_xml/"
 										+ resRec[6].replaceAll(".zip", ".xml"));
 								if (tmp.isFile()) {
 									if(showLog) {

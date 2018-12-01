@@ -60,3 +60,6 @@
 * 変更 BTS_K_KAKUTEI_J_L_EXT key:0,1,2,3,4
 11/28
 * 変更 BTSC_KEIYAKU_CHECK_NEW key:3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13　BTSC_KEIYAKU_CHECKデータを自動採番以外全項目キーとして使用するときにはデータ名を「BTSC_KEIYAKU_CHECK_NEW」で使用してくだい。
+12/1
+* BTSC_DOUJIDORYO_FILE_STATUS 更新日次を比較除外に変更。
+* BTSH001のupdateファイル比較プログラム別途追加。DiffTxt

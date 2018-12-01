@@ -964,7 +964,7 @@ public class DiffCsv {
 		dateSet.add(1);
 		dateSet.add(8);
 		// 比較除外カラム
-		Integer[] exclude = { 11, 12, 13, 14, 15 };
+		Integer[] exclude = { 8, 11, 12, 13, 14, 15 };
 		dataAttrMap.put("BTSC_DOUJIDORYO_FILE_STATUS", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
