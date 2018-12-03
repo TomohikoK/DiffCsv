@@ -440,24 +440,19 @@ public class DiffCsv {
 	private String getKeyStr(String[] dat) {
 		StringBuffer key = new StringBuffer();
 		int[] kCols = dataAttrMap.get(data).keyCols;
-		boolean containDate = false;
 		for (int i = 0; i < kCols.length; i++) {
 			String keyData = "";
 			// 日付のときはDate.toStringに変換
 			if (dataAttrMap.get(data).dateCheckSet.contains(kCols[i])) {
-				containDate = true;
 				keyData = parseDate(dat[kCols[i]]) != null ? SDF14.format(parseDate(dat[kCols[i]])) : "";
 			} else {
 				keyData = dat[kCols[i]];
 			}
 			key.append(keyData);
 		}
-//		if(containDate)
-//			logger.debug("key = " +key.toString());
 		return key.toString().trim();
 	}
 
-//if (dataAttrMap.get(data).dateCheckSet.contains(i)) {
 	/**
 	 * 複数の結果ファイルを１つのコレクションを作成。
 	 *
@@ -665,7 +660,7 @@ public class DiffCsv {
 	 * BTSC_BP_EXT_STATUS
 	 */
 	private void initializeBtscBpExtStatus() {
-		int[] key = { 0, 1, 2, 3 };
+		int[] key = { 0, 1, 2, 3, 4 };
 		Set<Integer> floatSet = new HashSet<Integer>();
 		Set<Integer> dateSet = new HashSet<Integer>();
 		Integer[] exclude = { 5, 6, 7, 8 };
