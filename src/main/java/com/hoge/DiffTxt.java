@@ -154,43 +154,72 @@ public class DiffTxt {
 		for (String[] expRec : expRecList) {
 			boolean found = false;
 			for (String[] resRec : tmpList) {
-				// 対象日
-				if (expRec[0].equalsIgnoreCase(resRec[3].replaceAll("-", ""))) {
-					// 情報区分コード
-					if (expRec[1].equalsIgnoreCase(resRec[1])) {
-						// 事業者ID
-						if (expRec[2].equalsIgnoreCase(resRec[4])) {
-							// ファイル名[6]
-							String asksFileName = expRec[0] + "/" + expRec[2] + "/" + expRec[3].substring(0, 6);
-							if (resRec[6].startsWith(asksFileName)) {
-								// ファイル存在確認
-								File tmp = new File(this.result + "/../res_xml/"
-										+ resRec[6].replaceAll(".zip", ".xml"));
-								if (tmp.isFile()) {
-									if(showLog) {
-										logger.info("match exp="+String.join(",", expRec));
-										logger.info("match res="+String.join(",", resRec));
-									}
-									matchCount++;
-									found = true;
-									tmpList.remove(resRec);
-									break;
-								}
-							}
-						}
+				if (compareCols(resRec, expRec)) {
+					matchCount++;
+					found = true;
+					tmpList.remove(resRec);
+					if (showLog) {
+						logger.info("match exp=" + String.join(",", expRec));
+						logger.info("match res=" + String.join(",", resRec));
 					}
+					break;
 				}
+//				logger.info("unmatch res=" + String.join(",", resRec));
 			}
 			if (!found) {
 				unMatchCount++;
-				if(showLog) {
-					logger.info("unmatch exp="+String.join(",", expRec));
+				if (showLog) {
+					logger.info("unmatch exp=" + String.join(",", expRec));
 				}
 			}
 		}
 		if (tmpList.size() > 0) {
 			remainJgCount++;
 		}
+	}
+
+	private boolean compareCols(String[] resRec, String[] expRec) {
+		// 対象日
+		if (expRec[0].equalsIgnoreCase(resRec[0].replaceAll("-", ""))) {
+			// 情報区分コード
+			if (expRec[1].equalsIgnoreCase(resRec[1])) {
+				// 事業者ID
+				if (expRec[2].equalsIgnoreCase(resRec[2])) {
+					// ファイル名[6]
+					String asksFileName = expRec[0] + "/" + expRec[2] + "/" + expRec[3];
+					if (resRec[3].startsWith(expRec[3])) {
+						// ファイル存在確認
+						return true;
+//						File tmp = new File(this.result + "/../doujidoryo_half_time/" + asksFileName);
+//						if (tmp.isFile()) {
+//							return true;
+//						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	private boolean compareColsTmp(String[] resRec, String[] expRec) {
+		// 対象日
+		if (expRec[0].equalsIgnoreCase(resRec[0].replaceAll("-", ""))) {
+			// 情報区分コード
+			if (expRec[1].equalsIgnoreCase(resRec[1])) {
+				// 事業者ID
+				if (expRec[2].equalsIgnoreCase(resRec[2])) {
+					// ファイル名[3]
+					String asksFileName = expRec[3] + "/" + expRec[2] + "/" + expRec[3].substring(0, 6);
+					if (resRec[3].startsWith(asksFileName)) {
+						// ファイル存在確認
+						File tmp = new File(this.result + "/../res_xml/" + resRec[6].replaceAll(".zip", ".xml"));
+						if (tmp.isFile()) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	private void logoutStat(Map<String, Map<String, List<String[]>>> rootMap) {
