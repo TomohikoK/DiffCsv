@@ -1123,38 +1123,61 @@ public class DiffCsv {
 		Integer[] exclude = { 20, 21, 22, 23 };
 		dataAttrMap.put("BTSC_MOSHIKOMI_INFO", new DataAttr(key, floatSet, dateSet, exclude));
 	}
+
 	/**
 	 * BTSC_DOUJIDORYO_FILE_TRANSFER
 	 */
 	private void btscDoujidoryoFileTransfer() {
 		// キーカラム
-		int[] key = { 0,1 };
+		int[] key = { 0, 1 };
 		// 数値型カラム
 		Set<Integer> floatSet = new HashSet<Integer>();
 		// 日付型カラム指定
 		Set<Integer> dateSet = new HashSet<Integer>();
 		// 比較除外カラム
-		Integer[] exclude = {  };
+		Integer[] exclude = {};
 		dataAttrMap.put("BTSC_DOUJIDORYO_FILE_TRANSFER", new DataAttr(key, floatSet, dateSet, exclude));
 	}
+
 	/**
 	 * BTSC_DOUJIDORYO_STATUS_NOTICE
 	 */
 	private void btscDoujidoryoStatusNotice() {
 		// キーカラム
-		int[] key = { 0,1 };
+		int[] key = { 0, 1 };
 		// 数値型カラム
 		Set<Integer> floatSet = new HashSet<Integer>();
 		// 日付型カラム指定
 		Set<Integer> dateSet = new HashSet<Integer>();
 		// 比較除外カラム
-		Integer[] exclude = {  };
+		Integer[] exclude = {};
 		dataAttrMap.put("BTSC_DOUJIDORYO_STATUS_NOTICE", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
+	/**
+	 * IF0513
+	 */
+	private void if0513() {
+		// キーカラム
+		int[] key = { 0, 1, 2, 3, 4 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		floatSet.add(7);
+		floatSet.add(8);
+		floatSet.add(9);
+		floatSet.add(10);
+		floatSet.add(11);
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		// 比較除外カラム
+		Integer[] exclude = {};
+		dataAttrMap.put("IF0513", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
 	public DiffCsv() {
 		dataAttrMap = new HashMap<String, DataAttr>();
 
+		if0513();
 		btscDoujidoryoStatusNotice();
 		btscDoujidoryoFileTransfer();
 		initializeBtscYukoKwhLExt();
