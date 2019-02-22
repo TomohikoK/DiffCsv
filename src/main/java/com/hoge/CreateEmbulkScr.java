@@ -30,8 +30,8 @@ public class CreateEmbulkScr {
 	private String[][] typeData = { //
 			{ "VARCHAR2", "string" }, //
 			{ "CHAR", "string" }, //
-			{ "DATE", "timestamp, format: '%Y-%m-%d' " }, //
-			{ "TIMESTAMP(6)", "timestamp, format: '%Y-%m-%d %k:%M:%S' " }, //
+			{ "DATE", "timestamp, format: '%Y-%m-%d'" }, //
+			{ "TIMESTAMP(6)", "timestamp, format: '%Y-%m-%d %k:%M:%S'" }, //
 			{ "NUMBER", "long" }, //
 	};
 
@@ -46,7 +46,7 @@ public class CreateEmbulkScr {
 		if (args.length < 1) {
 //			string[] a = { "qv_hatsudensha_keiryo_l", "dmdl" };
 //			String[] a = { "bts_chiten_himozuke_eigyo", "tocsv" };
-			String[] a = { "BTS_CHITEN_HIMOZUKE", "todb" };
+			String[] a = { "BTS_YUKO_KWH_L_EXT", "todb" };
 			args = a;
 		}
 		target.tableName = args[0];
@@ -101,7 +101,7 @@ public class CreateEmbulkScr {
 		sb.append("  columns:\n");
 
 		for (String[] dat : colList) {
-			sb.append("  - {name: " + dat[1].toUpperCase() + ", type: " + convType(dat[2], dat[3]) + "}\n");
+			sb.append("  - {name: " + dat[1].toUpperCase() + ", type: " + convType(dat[1],dat[2], dat[3]) + "}\n");
 		}
 
 		sb.append("out:\n");
@@ -146,7 +146,7 @@ public class CreateEmbulkScr {
 		sb.append("    allow_optional_columns: false\n");
 		sb.append("    columns:\n");
 		for (String[] dat : colList) {
-			sb.append("    - {name: " + dat[1].toUpperCase() + ", type: " + convType(dat[2], dat[3]) + "}\n");
+			sb.append("    - {name: " + dat[1].toUpperCase() + ", type: " + convType(dat[1],dat[2], dat[3]) + "}\n");
 		}
 		sb.append("out:\n");
 		sb.append("  type: oracle\n");
@@ -158,7 +158,6 @@ public class CreateEmbulkScr {
 		sb.append("  options: {LoginTimeout: 20000}\n");
 		sb.append("  mode: truncate_insert\n");
 		sb.append("  insert_method: direct\n");
-		sb.append("\n");
 
 		return sb.toString();
 	}
@@ -197,7 +196,7 @@ public class CreateEmbulkScr {
 			sb.append( //
 					"\t\t\"" + dat[1] + "\"\n" + //
 							"\t\t@windgate.jdbc.column(name = \"" + dat[1] + "\")\n" + //
-							"\t\t" + dat[1].toLowerCase() + " : " + convType(dat[2], dat[3]) + ";\n");
+							"\t\t" + dat[1].toLowerCase() + " : " + convType(dat[1],dat[2], dat[3]) + ";\n");
 		}
 		sb.append("};");
 		return sb.toString();
@@ -231,17 +230,29 @@ public class CreateEmbulkScr {
 		}
 	}
 
-	private String convType(String org, String scale) {
+	private String convType(String colName,String org, String scale) {
 		if (!typeMap.containsKey(org)) {
 			throw new IllegalArgumentException("table:" + tableName + " type:" + org + " cant mapping");
 		}
 		if (scale != null) {
-			if (Integer.parseInt(scale) > 0) {
+			if(org.startsWith("TIMESTAMP")) {
+				return "timestamp, format: '%Y-%m-%d %k:%M:%S'";
+			}else if (Integer.parseInt(scale) > 0) {
 				return "double";
 			} else {
 				return "long";
 			}
 		}
+		if("WRITE_DATE".equalsIgnoreCase(colName)) {
+			return "timestamp, format: '%Y-%m-%d %k:%M:%S'";
+		}
+		if("UPD_DATE".equalsIgnoreCase(colName)) {
+			return "timestamp, format: '%Y-%m-%d %k:%M:%S'";
+		}
+		if("NEW_DATE".equalsIgnoreCase(colName)) {
+			return "timestamp, format: '%Y-%m-%d %k:%M:%S'";
+		}
+		//NEW_DATE
 		return typeMap.get(org);
 	}
 }
