@@ -35,6 +35,7 @@ public class DiffCsv {
 
 	static private Logger logger = LoggerFactory.getLogger(DiffCsv.class);
 	static private String DELIMITTER = "\t";
+	static private SimpleDateFormat SDF8 = new SimpleDateFormat("yy-MM-dd");
 	static private SimpleDateFormat SDF10 = new SimpleDateFormat("yyyy-MM-dd");
 	static private SimpleDateFormat SDF14 = new SimpleDateFormat("yyyyMMddHHmmSS");
 	static private SimpleDateFormat SDF19 = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
@@ -55,6 +56,9 @@ public class DiffCsv {
 	private int notFoundExpCount;
 	private int resDupCount;
 	private int expDupCount;
+
+	private StringBuilder sb = new StringBuilder();
+	private Set<Integer> unmatchCol = new HashSet<Integer>();
 
 	public static void main(String[] args) throws ParseException {
 		logger.info("start...");
@@ -105,6 +109,7 @@ public class DiffCsv {
 		options.addOption(targetValueOption);
 		options.addOption(detailOption);
 
+		DiffCsv diffCsv = null;
 		try {
 			CommandLineParser parser = new DefaultParser();
 			System.out.println(String.join(",", args));
@@ -125,41 +130,57 @@ public class DiffCsv {
 					: true;
 //			diffCsv.showDetail = Boolean.parseBoolean((String) commandLine.getOptionValue("log", "true"));
 
-			DiffCsv diffCsv = new DiffCsv(expect, result, batch, data, excludeTargetCol, excludeTargetValue,
+			diffCsv = new DiffCsv(expect, result, batch, data, excludeTargetCol, excludeTargetValue,
 					showDetail);
+		} catch (Exception e) {
+			HelpFormatter formatter = new HelpFormatter();
+			formatter.printHelp("DiffCsv", options);
+			e.printStackTrace();
+			System.exit(1);
+		}
+		//	実行
+		try {
 			diffCsv.exec();
 			logger.info("complete " + (((new Date()).getTime()) - startTime) + " ms");
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		} catch (Exception e) {
-			HelpFormatter formatter = new HelpFormatter();
-			formatter.printHelp("DiffCsv", options);
 			e.printStackTrace();
 		} finally {
 		}
 	}
 
 	public void exec() throws IOException {
-		logger.info("expect file = " + this.expect + "/" + this.data + ".csv");
-		logger.info("result path = " + this.result + " /*.csv");
+		logger.info("result path = " + this.result + "/*.csv");
 		logger.info("data name   = " + this.data);
 		// 期待するデータ
 		File expDir = new File(this.expect);
-		FilenameFilter filter = new FilenameFilter() {
-			@Override
-			public boolean accept(File dir, String name) {
-				String fileName = data + ".csv";
-				if ((fileName.equalsIgnoreCase(name))) {
-//				if (name.startsWith(data) && name.endsWith(".csv")) {
-					return true;
+		String[] expFileList = null;
+		if(expDir.isFile()) {
+			expFileList = new String[1];
+			expFileList[0] = this.expect;
+			logger.info("expect file = " + this.expect);
+		}else if(expDir.isDirectory()) {
+			FilenameFilter filter = new FilenameFilter() {
+				@Override
+				public boolean accept(File dir, String name) {
+					String fileName = data + ".csv";
+					if ((fileName.equalsIgnoreCase(name))) {
+	//				if (name.startsWith(data) && name.endsWith(".csv")) {
+						return true;
+					}
+					return false;
 				}
-				return false;
+			};
+			expFileList = expDir.list(filter);
+			for(int i=0;i<expFileList.length;i++) {
+				expFileList[i] = this.expect + expFileList[i];
 			}
-		};
-		String[] expFileList = expDir.list(filter);
+			logger.info("expect dir = " + String.join(":", expFileList));
+		}
 		List<String[]> expList = new ArrayList<String[]>();
 		for (String fileName : expFileList) {
-			List<String[]> tmpList = readCsvToList(this.expect + "/" + fileName);
+			List<String[]> tmpList = readCsvToList(fileName);
 			// 指定した更新者以外を削除
 			if (this.excludeTargetValue != null) {
 				Iterator<String[]> it = tmpList.iterator();
@@ -176,21 +197,26 @@ public class DiffCsv {
 			expList.addAll(tmpList);
 		}
 		// key順にソート
+		logger.debug("exp sorting...");
 		Collections.sort(expList, new RecComparator());
 		// 重複キーチェック
+		logger.debug("check dupulicate...");
 		checkDuplicate(expList);
 		// 出力結果データ
+		logger.debug("res read...");
 		List<String[]> resList = generateResultData();
 		// key順にソート
-//		Collections.sort(resList, new RecComparator());
+		logger.debug("res sorting...");
+		Collections.sort(resList, new RecComparator());
 //		resList.stream().forEach(s->System.out.println(String.join(",",s)));
 
+		logger.debug("start compare to res");
 		compareExpToResList(expList, resList);
-		compareResToExpList(resList, expList);
+//		compareResToExpList(resList, expList);
 
 		logger.info(this.data);
 		logger.info("exp lines = " + expList.size());
-		logger.info("res lines = " + resList.size());
+		logger.info("remain res lines = " + resList.size());
 		logger.info("match  " + matchCount);
 		logger.info("unmatch  " + unMatchCount);
 		logger.info("notFoundRes " + notFoundResCount);
@@ -205,7 +231,7 @@ public class DiffCsv {
 			if (!keySet.contains(getKeyStr(rec))) {
 				keySet.add(getKeyStr(rec));
 			} else {
-				if (showDetail)
+//				if (showDetail)
 					System.out.println("expDup\t" + String.join(DELIMITTER, rec));
 				expDupCount++;
 			}
@@ -242,19 +268,27 @@ public class DiffCsv {
 	 */
 	private void compareExpToResList(List<String[]> expList, List<String[]> resList) {
 		// expList -> resList
+		long loopCount =0l;
+		String expKey = "";
 		for (String[] exp : expList) {
+			loopCount++;
+			if((loopCount % 100000)==0) {
+				logger.debug("["+loopCount+" "+(new Date()).toString()+" ]");
+			}
 			boolean found = false;
-			String expKey = getKeyStr(exp);
+			expKey = getKeyStr(exp);
+			String[] matchObj = null;
 			for (String[] res : resList) {
 				// 存在するか？キーで比較
 				if (expKey.equalsIgnoreCase(getKeyStr(res))) {
 					if (found) {
 						// 重複
-						if (showDetail)
+//						if (showDetail)
 							System.out.println("resDup\t" + String.join(DELIMITTER, res));
 						this.resDupCount++;
 					} else {
 						found = true;
+						matchObj = res;
 						if (compareData(exp, res)) {
 							if (showDetail)
 								System.out.println("match\t" + String.join(DELIMITTER, exp));
@@ -265,14 +299,23 @@ public class DiffCsv {
 					}
 					break;
 				}
-//				if (expKey.compareTo(getKeyStr(res)) > 0 ) {
-//					break;
-//				}
+				//	比較対象のキーが大きい
+				if (expKey.compareTo(getKeyStr(res)) < 0 ) {
+					break;
+				}
+			}
+			if(matchObj != null) {
+				resList.remove(matchObj);
 			}
 			if (!found) {
 				notFoundResCount++;
-				if (showDetail)
+//				if (showDetail)
 					System.out.println("not found in res only exp\t" + String.join(DELIMITTER, exp));
+			}
+		}
+		if(resList.size() > 0) {
+			for(String[] res:resList) {
+				System.out.println("not found in exp only res\t" + String.join(DELIMITTER, res));
 			}
 		}
 	}
@@ -300,7 +343,7 @@ public class DiffCsv {
 			}
 			if (!found) {
 				notFoundExpCount++;
-				if (showDetail)
+//				if (showDetail)
 					System.out.println("not found in exp only res\t" + String.join(DELIMITTER, res));
 			}
 		}
@@ -314,20 +357,20 @@ public class DiffCsv {
 	 */
 	private boolean compareData(String[] exp, String[] res) {
 		boolean match = true;
-		Set<Integer> unmatchCol = new HashSet<Integer>();
-		List<Integer> targetCols = dataAttrMap.get(data).excludeCols;
+		unmatchCol.clear();
+		List<Integer> targetCols = dataAttrMap.get(data.toUpperCase()).excludeCols;
 		for (int i = 0; i < exp.length; i++) {
 			if (!targetCols.contains(i)) {
 				if (exp[i].equalsIgnoreCase(res[i])) {
 					// OK
 				} else {
-					if (dataAttrMap.get(data).floatCheckSet.contains(i)) {
+					if (dataAttrMap.get(data.toUpperCase()).floatCheckSet.contains(i)) {
 						if (!compareFloat(exp[i], res[i])) {
 							// not same
 							match = false;
 							unmatchCol.add(i);
 						}
-					} else if (dataAttrMap.get(data).dateCheckSet.contains(i)) {
+					} else if (dataAttrMap.get(data.toUpperCase()).dateCheckSet.contains(i)) {
 						if (!compareDate(exp[i], res[i])) {
 							// not same
 							match = false;
@@ -343,10 +386,10 @@ public class DiffCsv {
 		}
 		if (!match) {
 			this.unMatchCount++;
-			if (showDetail) {
+//			if (showDetail) {
 				System.out.println("unmatch exp\t" + getDifString(exp, unmatchCol));
 				System.out.println("unmatch res\t" + getDifString(res, unmatchCol));
-			}
+//			}
 		}
 		return match;
 	}
@@ -383,6 +426,11 @@ public class DiffCsv {
 		try {
 			// 2018-08-23 10:54:26.000000
 			switch (dat.length()) {
+			case 8:
+				if(dat.startsWith("00")) {
+					return SDF10.parse("19"+dat);
+				}
+				return SDF8.parse(dat);
 			case 10:
 				return SDF10.parse(dat);
 			case 19:
@@ -406,7 +454,7 @@ public class DiffCsv {
 	 * @return
 	 */
 	private String getDifString(String[] dats, Set<Integer> unmatchCol) {
-		StringBuffer sb = new StringBuffer();
+	    sb.setLength(0);
 		for (int i = 0; i < dats.length; i++) {
 			if (i > 0) {
 				sb.append(DELIMITTER);
@@ -429,28 +477,28 @@ public class DiffCsv {
 	 * @return
 	 */
 	private String getKeyStrold(String[] dat) {
-		StringBuffer key = new StringBuffer();
-		int[] keiCols = dataAttrMap.get(data).keyCols;
+	    sb.setLength(0);
+		int[] keiCols = dataAttrMap.get(data.toUpperCase()).keyCols;
 		for (int i = 0; i < keiCols.length; i++) {
-			key.append(dat[keiCols[i]]);
+			sb.append(dat[keiCols[i]]);
 		}
-		return key.toString();
+		return sb.toString();
 	}
 
 	private String getKeyStr(String[] dat) {
-		StringBuffer key = new StringBuffer();
-		int[] kCols = dataAttrMap.get(data).keyCols;
+	    sb.setLength(0);
+		int[] kCols = dataAttrMap.get(data.toUpperCase()).keyCols;
 		for (int i = 0; i < kCols.length; i++) {
 			String keyData = "";
 			// 日付のときはDate.toStringに変換
-			if (dataAttrMap.get(data).dateCheckSet.contains(kCols[i])) {
+			if (dataAttrMap.get(data.toUpperCase()).dateCheckSet.contains(kCols[i])) {
 				keyData = parseDate(dat[kCols[i]]) != null ? SDF14.format(parseDate(dat[kCols[i]])) : "";
 			} else {
 				keyData = dat[kCols[i]];
 			}
-			key.append(keyData);
+			sb.append(keyData);
 		}
-		return key.toString().trim();
+		return sb.toString().trim();
 	}
 
 	/**
@@ -584,7 +632,7 @@ public class DiffCsv {
 			floatSet1.add(i);
 		}
 		Set<Integer> dateSet = new HashSet<Integer>();
-		Integer[] exclude1 = { 109, 110, 111 };
+		Integer[] exclude1 = { 108, 109, 110, 111 };
 		dataAttrMap.put("BTSC_YUKO_KWH_L_EXT", new DataAttr(key1, floatSet1, dateSet, exclude1));
 	}
 
@@ -770,7 +818,7 @@ public class DiffCsv {
 		dateSet.add(9);
 		dateSet.add(10);
 		// 比較除外カラム
-		Integer[] exclude = { 1, 2, 14, 15, 16, 17 };
+		Integer[] exclude = { 1, 2, 7, 14, 15, 16, 17 };
 		dataAttrMap.put("BTSC_KEIYAKU_CHECK", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
@@ -1246,7 +1294,7 @@ public class DiffCsv {
 
 		@Override
 		public int compare(String[] rec1, String[] rec2) {
-			return getKeyStr(rec1).compareTo(getKeyStr(rec1));
+			return getKeyStr(rec1).compareTo(getKeyStr(rec2));
 		}
 	}
 
