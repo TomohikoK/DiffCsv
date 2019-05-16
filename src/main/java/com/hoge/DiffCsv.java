@@ -48,7 +48,7 @@ public class DiffCsv {
 	private int excludeTargetCol;
 	private String excludeTargetValue;
 	/** データ属性保管マップ **/
-	private HashMap<String, DataAttr> dataAttrMap;
+	private DataMap dataAttrMap;
 	// 結果カウント
 	private int unMatchCount;
 	private int notFoundResCount;
@@ -273,7 +273,7 @@ public class DiffCsv {
 		for (String[] exp : expList) {
 			loopCount++;
 			if((loopCount % 100000)==0) {
-				logger.debug("["+loopCount+" "+(new Date()).toString()+" ]");
+				logger.debug("["+loopCount+" "+(new Date()).toString()+" ] resList="+resList.size());
 			}
 			boolean found = false;
 			expKey = getKeyStr(exp);
@@ -621,6 +621,20 @@ public class DiffCsv {
 		return resDupCount;
 	}
 
+	public class DataMap{
+		private HashMap<String, DataAttr> map = new HashMap<String,DataAttr>();
+		public DataAttr get(String key) {
+			if(!map.containsKey(key)){
+				logger.error("not found date = " + key);
+				logger.error("please select " + String.join(",", map.keySet()));
+				System.exit(1);
+			}
+			return map.get(key);
+		}
+		void put(String key,DataAttr attr) {
+			map.put(key, attr);
+		}
+	}
 	/**
 	 * BTSC_YUKO_KWH_L_EXT
 	 */
@@ -1223,7 +1237,7 @@ public class DiffCsv {
 	}
 
 	public DiffCsv() {
-		dataAttrMap = new HashMap<String, DataAttr>();
+		dataAttrMap = new DataMap();
 
 		if0513();
 		btscDoujidoryoStatusNotice();
