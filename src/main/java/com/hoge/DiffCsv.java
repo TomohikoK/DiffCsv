@@ -314,8 +314,11 @@ public class DiffCsv {
 			}
 		}
 		if(resList.size() > 0) {
-			for(String[] res:resList) {
-				System.out.println("not found in exp only res\t" + String.join(DELIMITTER, res));
+			System.out.println("not found in exp only res size\t" + resList.size());
+			if (showDetail) {
+				for (String[] res : resList) {
+					System.out.println("not found in exp only res\t" + String.join(DELIMITTER, res));
+				}
 			}
 		}
 	}
@@ -423,6 +426,7 @@ public class DiffCsv {
 	}
 
 	private Date parseDate(String dat) {
+		dat = dat.replaceAll("/", "-");
 		try {
 			// 2018-08-23 10:54:26.000000
 			switch (dat.length()) {
@@ -884,7 +888,7 @@ public class DiffCsv {
 		}
 		// 日付型カラム指定
 		Set<Integer> dateSet = new HashSet<Integer>();
-		dateSet.add(1);
+		dateSet.add(4);
 		dateSet.add(18);
 		dateSet.add(19);
 		// 比較除外カラム
@@ -897,7 +901,7 @@ public class DiffCsv {
 	 */
 	private void initializeBtscShijisuIf() {
 		// キーカラム
-		int[] key = { 0, 1, 2, 3, 4, 5, 6, 7 };
+		int[] key = { 0, 1, 2, 3, 4, 5, 6, 7, 12 };
 		// 数値型カラム
 		Set<Integer> floatSet = new HashSet<Integer>();
 		for (int i = 8; i < 12; i++) {
@@ -908,6 +912,8 @@ public class DiffCsv {
 		}
 		// 日付型カラム指定
 		Set<Integer> dateSet = new HashSet<Integer>();
+		dateSet.add(1);
+		dateSet.add(6);
 		dateSet.add(19);
 		dateSet.add(20);
 		// 比較除外カラム
@@ -927,6 +933,8 @@ public class DiffCsv {
 		Set<Integer> floatSet = new HashSet<Integer>();
 		// 日付型カラム指定
 		Set<Integer> dateSet = new HashSet<Integer>();
+		dateSet.add(1);
+		dateSet.add(6);
 		// 比較除外カラム
 		Integer[] exclude = { 21, 22, 23, 24 };
 		dataAttrMap.put("BTSC_SHIJISU_CHK_RES", new DataAttr(key, floatSet, dateSet, exclude));
@@ -1236,9 +1244,31 @@ public class DiffCsv {
 		dataAttrMap.put("IF0513", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
+	/**
+	 * btsc_yuko_kwh_l_res
+	 */
+	private void btscYukoKwhLRes() {
+		// キーカラム
+		int[] key = { 0, 1, 2, 3, 4, 5 };
+		// 数値型カラム
+		Set<Integer> floatSet = new HashSet<Integer>();
+		floatSet.add(6);
+		floatSet.add(7);
+		floatSet.add(8);
+		floatSet.add(9);
+		floatSet.add(10);
+		// 日付型カラム指定
+		Set<Integer> dateSet = new HashSet<Integer>();
+		dateSet.add(3);
+		// 比較除外カラム
+		Integer[] exclude = {};
+		dataAttrMap.put("BTSC_YUKO_KWH_L_RES", new DataAttr(key, floatSet, dateSet, exclude));
+	}
+
 	public DiffCsv() {
 		dataAttrMap = new DataMap();
 
+		btscYukoKwhLRes();
 		if0513();
 		btscDoujidoryoStatusNotice();
 		btscDoujidoryoFileTransfer();
