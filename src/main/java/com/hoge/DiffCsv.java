@@ -35,12 +35,13 @@ public class DiffCsv {
 
 	static private Logger logger = LoggerFactory.getLogger(DiffCsv.class);
 	static private String DELIMITTER = "\t";
-	static private SimpleDateFormat SDF8 = new SimpleDateFormat("yy-MM-dd");
+	static private SimpleDateFormat SDF8 = new SimpleDateFormat("yyyyMMdd");
 	static private SimpleDateFormat SDF10 = new SimpleDateFormat("yyyy-MM-dd");
 	static private SimpleDateFormat SDF14 = new SimpleDateFormat("yyyyMMddHHmmSS");
 	static private SimpleDateFormat SDF19 = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
 	static private SimpleDateFormat SDF26 = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS.ssssss");
 	private boolean showDetail;
+	private boolean showSurplus;
 	private String expect;
 	private String result;
 	private String batch;
@@ -99,6 +100,9 @@ public class DiffCsv {
 				.type(String.class).desc("exclude value").build();
 		Option detailOption = Option.builder("l").longOpt("log").hasArg().required(false).type(Boolean.class)
 				.desc("show detail log").build();
+		//	show surplus data
+		Option surplusOption = Option.builder("s").longOpt("surplus").hasArg().required(false).type(Boolean.class)
+				.desc("show surplus in res").build();
 
 		Options options = new Options();
 		options.addOption(expDirOption);
@@ -108,6 +112,7 @@ public class DiffCsv {
 		options.addOption(targetColOption);
 		options.addOption(targetValueOption);
 		options.addOption(detailOption);
+		options.addOption(surplusOption);
 
 		DiffCsv diffCsv = null;
 		try {
@@ -128,10 +133,13 @@ public class DiffCsv {
 			boolean showDetail = commandLine.hasOption("log")
 					? Boolean.parseBoolean((String) commandLine.getParsedOptionValue("log"))
 					: true;
+			boolean showSurplus = commandLine.hasOption("surplus")
+					? Boolean.parseBoolean((String) commandLine.getParsedOptionValue("surplus"))
+					: true;
 //			diffCsv.showDetail = Boolean.parseBoolean((String) commandLine.getOptionValue("log", "true"));
 
 			diffCsv = new DiffCsv(expect, result, batch, data, excludeTargetCol, excludeTargetValue,
-					showDetail);
+					showDetail, showSurplus);
 		} catch (Exception e) {
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("DiffCsv", options);
@@ -315,7 +323,7 @@ public class DiffCsv {
 		}
 		if(resList.size() > 0) {
 			System.out.println("not found in exp only res size\t" + resList.size());
-			if (showDetail) {
+			if (showSurplus) {
 				for (String[] res : resList) {
 					System.out.println("not found in exp only res\t" + String.join(DELIMITTER, res));
 				}
@@ -398,6 +406,18 @@ public class DiffCsv {
 	}
 
 	private boolean compareFloat(String exp, String res) {
+		if((exp == null) && (res == null)) {
+			return true;
+		}
+		if((exp == null) || (res == null)){
+			return false;
+		}
+		if((exp.length() < 1) && (res.length() < 1)) {
+			return true;
+		}
+		if((exp.length() < 1) || (res.length() < 1)) {
+			return false;
+		}
 		if (parseFloat(exp) == parseFloat(res)) {
 			return true;
 		} else {
@@ -590,7 +610,7 @@ public class DiffCsv {
 	}
 
 	public DiffCsv(String expect, String result, String batch, String data, int excludeTargetCol,
-			String excludeTargetValue, boolean showDetail) {
+			String excludeTargetValue, boolean showDetail, boolean showSurplus) {
 		this();
 		this.expect = expect;
 		this.result = result;
@@ -599,6 +619,7 @@ public class DiffCsv {
 		this.excludeTargetCol = excludeTargetCol;
 		this.excludeTargetValue = excludeTargetValue;
 		this.showDetail = showDetail;
+		this.showSurplus = showSurplus;
 	}
 
 	public int getUnMatchCount() {
@@ -686,10 +707,12 @@ public class DiffCsv {
 	 * BTSC_BEFORE_CALC_CHK_L
 	 */
 	private void initializeBtscBeforeCalcChkL() {
-		int[] key = { 0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13 };
+		int[] key = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
 		Set<Integer> floatSet = new HashSet<Integer>();
 		floatSet.add(15);
 		Set<Integer> dateSet = new HashSet<Integer>();
+		dateSet.add(6);
+		dateSet.add(10);
 		Integer[] exclude = { 21, 22 };
 		dataAttrMap.put("BTSC_BEFORE_CALC_CHK_L", new DataAttr(key, floatSet, dateSet, exclude));
 	}
@@ -701,6 +724,8 @@ public class DiffCsv {
 		int[] key = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
 		Set<Integer> floatSet = new HashSet<Integer>();
 		Set<Integer> dateSet = new HashSet<Integer>();
+		dateSet.add(8);
+		dateSet.add(12);
 		Integer[] exclude = { 21, 22 };
 		dataAttrMap.put("BTSC_BEFORE_CALC_CHK_L_DETAIL", new DataAttr(key, floatSet, dateSet, exclude));
 	}
