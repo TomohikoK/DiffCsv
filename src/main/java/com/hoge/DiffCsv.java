@@ -950,6 +950,7 @@ public class DiffCsv {
 
 	/**
 	 * BTSC_SHIJISU_CHK_RES
+	 * 現行PGのSQL結果不定によりカラム9は比較から除外。
 	 */
 	private void initializeBtscShijisuChkRes() {
 		// キーカラム
@@ -961,7 +962,7 @@ public class DiffCsv {
 		dateSet.add(1);
 		dateSet.add(6);
 		// 比較除外カラム
-		Integer[] exclude = { 21, 22, 23, 24 };
+		Integer[] exclude = { 9, 21, 22, 23, 24 };
 		dataAttrMap.put("BTSC_SHIJISU_CHK_RES", new DataAttr(key, floatSet, dateSet, exclude));
 	}
 
