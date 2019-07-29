@@ -65,3 +65,4 @@
 * BTSH001のupdateファイル比較プログラム別途追加。DiffTxt
 12/3
 * BTSC_BP_EXT_STATUS キー１項目追加。key = { 0, 1, 2, 3, 4 };
+サンプルコメント
