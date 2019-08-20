@@ -127,15 +127,9 @@ public class DiffTxt {
 		// 比較 exp -> res
 		compareToRes();
 
-//		logger.info("exp lines = " + expList.size());
-//		logger.info("res lines = " + resList.size());
 		logger.info("match  " + matchCount);
 		logger.info("unmatch  " + unMatchCount);
 		logger.info("remainJgCount	" + remainJgCount);
-//		logger.info("notFoundRes " + notFoundResCount);
-//		logger.info("notFoundExp " + notFoundExpCount);
-//		logger.info("expDup " + expDupCount);
-//		logger.info("resDup " + resDupCount);
 	}
 
 	/**
@@ -186,14 +180,9 @@ public class DiffTxt {
 				// 事業者ID
 				if (expRec[2].equalsIgnoreCase(resRec[2])) {
 					// ファイル名[6]
-					String asksFileName = expRec[0] + "/" + expRec[2] + "/" + expRec[3];
 					if (resRec[3].startsWith(expRec[3])) {
 						// ファイル存在確認
 						return true;
-//						File tmp = new File(this.result + "/../doujidoryo_half_time/" + asksFileName);
-//						if (tmp.isFile()) {
-//							return true;
-//						}
 					}
 				}
 			}

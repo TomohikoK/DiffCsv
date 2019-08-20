@@ -55,8 +55,8 @@ public class DiffTxtTest {
 	@Test
 	public final void testMain() {
 		String[] testParam = { //
-				"-e", "src/test/resources/com/hoge/DiffTxt/update/exp", //
-				"-r", "src/test/resources/com/hoge/DiffTxt/update/res", //
+				"-e", "src/test/resources/com/hoge/DiffTxtData/update/exp/", //
+				"-r", "src/test/resources/com/hoge/DiffTxtData/update/res", //
 				"-d", "update", //
 				"-l", "false", //
 		};
@@ -74,8 +74,8 @@ public class DiffTxtTest {
 	@Test
 	public final void testUpdate() {
 		DiffTxt target = new DiffTxt(
-				"src/test/resources/com/hoge/DiffTxt/update/exp", //
-				"src/test/resources/com/hoge/DiffTxt/update/res", //
+				"src/test/resources/com/hoge/DiffTxtData/update/exp", //
+				"src/test/resources/com/hoge/DiffTxtData/update/res", //
 				"update", //
 				true
 				);
@@ -88,28 +88,7 @@ public class DiffTxtTest {
 		}
 		Assert.assertEquals(1, target.getExpMap().size());
 		Assert.assertEquals(6,target.getResMap().get("20180830").size());
-		Assert.assertEquals(152, target.getMatchCount());
-		Assert.assertEquals(16, target.getUnMatchCount());
+		Assert.assertEquals(167, target.getMatchCount());
+		Assert.assertEquals(1, target.getUnMatchCount());
 	}
-	@Test
-	public final void testDaily() {
-		DiffTxt target = new DiffTxt(
-				"src/test/resources/com/hoge/DiffTxt/daily/exp", //
-				"src/test/resources/com/hoge/DiffTxt/daily/res", //
-				"update", //
-				true
-				);
-		try {
-			target.exec();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			fail();
-		}
-		Assert.assertEquals(1, target.getExpMap().size());
-		Assert.assertEquals(6,target.getResMap().get("20180830").size());
-		Assert.assertEquals(6, target.getMatchCount());
-		Assert.assertEquals(0, target.getUnMatchCount());
-	}
-
 }

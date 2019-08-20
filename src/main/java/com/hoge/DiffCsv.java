@@ -100,7 +100,7 @@ public class DiffCsv {
 				.type(String.class).desc("exclude value").build();
 		Option detailOption = Option.builder("l").longOpt("log").hasArg().required(false).type(Boolean.class)
 				.desc("show detail log").build();
-		//	show surplus data
+		// show surplus data
 		Option surplusOption = Option.builder("s").longOpt("surplus").hasArg().required(false).type(Boolean.class)
 				.desc("show surplus in res").build();
 
@@ -130,23 +130,18 @@ public class DiffCsv {
 			String excludeTargetValue = commandLine.hasOption("targetValue")
 					? (String) commandLine.getParsedOptionValue("targetValue")
 					: null;
-			boolean showDetail = commandLine.hasOption("log")
-					? Boolean.parseBoolean((String) commandLine.getParsedOptionValue("log"))
-					: true;
-			boolean showSurplus = commandLine.hasOption("surplus")
-					? Boolean.parseBoolean((String) commandLine.getParsedOptionValue("surplus"))
-					: true;
-//			diffCsv.showDetail = Boolean.parseBoolean((String) commandLine.getOptionValue("log", "true"));
+			boolean showDetail = Boolean.parseBoolean((String) commandLine.getOptionValue("log", "false"));
+			boolean showSurplus = Boolean.parseBoolean((String) commandLine.getOptionValue("surplus", "false"));
 
-			diffCsv = new DiffCsv(expect, result, batch, data, excludeTargetCol, excludeTargetValue,
-					showDetail, showSurplus);
+			diffCsv = new DiffCsv(expect, result, batch, data, excludeTargetCol, excludeTargetValue, showDetail,
+					showSurplus);
 		} catch (Exception e) {
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("DiffCsv", options);
 			e.printStackTrace();
-			System.exit(1);
+			throw (e);
 		}
-		//	実行
+		// 実行
 		try {
 			diffCsv.exec();
 			logger.info("complete " + (((new Date()).getTime()) - startTime) + " ms");
@@ -164,24 +159,24 @@ public class DiffCsv {
 		// 期待するデータ
 		File expDir = new File(this.expect);
 		String[] expFileList = null;
-		if(expDir.isFile()) {
+		if (expDir.isFile()) {
 			expFileList = new String[1];
 			expFileList[0] = this.expect;
 			logger.info("expect file = " + this.expect);
-		}else if(expDir.isDirectory()) {
+		} else if (expDir.isDirectory()) {
 			FilenameFilter filter = new FilenameFilter() {
 				@Override
 				public boolean accept(File dir, String name) {
 					String fileName = data + ".csv";
 					if ((fileName.equalsIgnoreCase(name))) {
-	//				if (name.startsWith(data) && name.endsWith(".csv")) {
+						// if (name.startsWith(data) && name.endsWith(".csv")) {
 						return true;
 					}
 					return false;
 				}
 			};
 			expFileList = expDir.list(filter);
-			for(int i=0;i<expFileList.length;i++) {
+			for (int i = 0; i < expFileList.length; i++) {
 				expFileList[i] = this.expect + expFileList[i];
 			}
 			logger.info("expect dir = " + String.join(":", expFileList));
@@ -216,11 +211,9 @@ public class DiffCsv {
 		// key順にソート
 		logger.debug("res sorting...");
 		Collections.sort(resList, new RecComparator());
-//		resList.stream().forEach(s->System.out.println(String.join(",",s)));
 
 		logger.debug("start compare to res");
 		compareExpToResList(expList, resList);
-//		compareResToExpList(resList, expList);
 
 		logger.info(this.data);
 		logger.info("exp lines = " + expList.size());
@@ -240,7 +233,7 @@ public class DiffCsv {
 				keySet.add(getKeyStr(rec));
 			} else {
 //				if (showDetail)
-					System.out.println("expDup\t" + String.join(DELIMITTER, rec));
+				System.out.println("expDup\t" + String.join(DELIMITTER, rec));
 				expDupCount++;
 			}
 		}
@@ -276,12 +269,12 @@ public class DiffCsv {
 	 */
 	private void compareExpToResList(List<String[]> expList, List<String[]> resList) {
 		// expList -> resList
-		long loopCount =0l;
+		long loopCount = 0l;
 		String expKey = "";
 		for (String[] exp : expList) {
 			loopCount++;
-			if((loopCount % 100000)==0) {
-				logger.debug("["+loopCount+" "+(new Date()).toString()+" ] resList="+resList.size());
+			if ((loopCount % 100000) == 0) {
+				logger.debug("[" + loopCount + " " + (new Date()).toString() + " ] resList=" + resList.size());
 			}
 			boolean found = false;
 			expKey = getKeyStr(exp);
@@ -292,7 +285,7 @@ public class DiffCsv {
 					if (found) {
 						// 重複
 //						if (showDetail)
-							System.out.println("resDup\t" + String.join(DELIMITTER, res));
+						System.out.println("resDup\t" + String.join(DELIMITTER, res));
 						this.resDupCount++;
 					} else {
 						found = true;
@@ -307,55 +300,26 @@ public class DiffCsv {
 					}
 					break;
 				}
-				//	比較対象のキーが大きい
-				if (expKey.compareTo(getKeyStr(res)) < 0 ) {
+				// 比較対象のキーが大きい
+				if (expKey.compareTo(getKeyStr(res)) < 0) {
 					break;
 				}
 			}
-			if(matchObj != null) {
+			if (matchObj != null) {
 				resList.remove(matchObj);
 			}
 			if (!found) {
 				notFoundResCount++;
 //				if (showDetail)
-					System.out.println("not found in res only exp\t" + String.join(DELIMITTER, exp));
+				System.out.println("not found in res only exp\t" + String.join(DELIMITTER, exp));
 			}
 		}
-		if(resList.size() > 0) {
+		if (resList.size() > 0) {
 			System.out.println("not found in exp only res size\t" + resList.size());
 			if (showSurplus) {
 				for (String[] res : resList) {
 					System.out.println("not found in exp only res\t" + String.join(DELIMITTER, res));
 				}
-			}
-		}
-	}
-
-	/**
-	 * リストの比較。結果ー＞期待値
-	 *
-	 * @param resList
-	 * @param expList
-	 */
-	private void compareResToExpList(List<String[]> resList, List<String[]> expList) {
-		// expList -> resList
-		for (String[] res : resList) {
-			boolean found = false;
-			String resKey = getKeyStr(res);
-			for (String[] exp : expList) {
-				// 存在するか？キーで比較
-				if (resKey.equalsIgnoreCase(getKeyStr(exp))) {
-					found = true;
-					break;
-				}
-//				if (resKey.compareTo(getKeyStr(exp)) < 0 ) {
-//					break;
-//				}
-			}
-			if (!found) {
-				notFoundExpCount++;
-//				if (showDetail)
-					System.out.println("not found in exp only res\t" + String.join(DELIMITTER, res));
 			}
 		}
 	}
@@ -398,24 +362,24 @@ public class DiffCsv {
 		if (!match) {
 			this.unMatchCount++;
 //			if (showDetail) {
-				System.out.println("unmatch exp\t" + getDifString(exp, unmatchCol));
-				System.out.println("unmatch res\t" + getDifString(res, unmatchCol));
+			System.out.println("unmatch exp\t" + getDifString(exp, unmatchCol));
+			System.out.println("unmatch res\t" + getDifString(res, unmatchCol));
 //			}
 		}
 		return match;
 	}
 
 	private boolean compareFloat(String exp, String res) {
-		if((exp == null) && (res == null)) {
+		if ((exp == null) && (res == null)) {
 			return true;
 		}
-		if((exp == null) || (res == null)){
+		if ((exp == null) || (res == null)) {
 			return false;
 		}
-		if((exp.length() < 1) && (res.length() < 1)) {
+		if ((exp.length() < 1) && (res.length() < 1)) {
 			return true;
 		}
-		if((exp.length() < 1) || (res.length() < 1)) {
+		if ((exp.length() < 1) || (res.length() < 1)) {
 			return false;
 		}
 		if (parseFloat(exp) == parseFloat(res)) {
@@ -451,8 +415,8 @@ public class DiffCsv {
 			// 2018-08-23 10:54:26.000000
 			switch (dat.length()) {
 			case 8:
-				if(dat.startsWith("00")) {
-					return SDF10.parse("19"+dat);
+				if (dat.startsWith("00")) {
+					return SDF10.parse("19" + dat);
 				}
 				return SDF8.parse(dat);
 			case 10:
@@ -478,7 +442,7 @@ public class DiffCsv {
 	 * @return
 	 */
 	private String getDifString(String[] dats, Set<Integer> unmatchCol) {
-	    sb.setLength(0);
+		sb.setLength(0);
 		for (int i = 0; i < dats.length; i++) {
 			if (i > 0) {
 				sb.append(DELIMITTER);
@@ -494,23 +458,8 @@ public class DiffCsv {
 		return sb.toString();
 	}
 
-	/**
-	 * キー項目を１つの文字列に連結。
-	 *
-	 * @param dat
-	 * @return
-	 */
-	private String getKeyStrold(String[] dat) {
-	    sb.setLength(0);
-		int[] keiCols = dataAttrMap.get(data.toUpperCase()).keyCols;
-		for (int i = 0; i < keiCols.length; i++) {
-			sb.append(dat[keiCols[i]]);
-		}
-		return sb.toString();
-	}
-
 	private String getKeyStr(String[] dat) {
-	    sb.setLength(0);
+		sb.setLength(0);
 		int[] kCols = dataAttrMap.get(data.toUpperCase()).keyCols;
 		for (int i = 0; i < kCols.length; i++) {
 			String keyData = "";
@@ -622,6 +571,19 @@ public class DiffCsv {
 		this.showSurplus = showSurplus;
 	}
 
+	public DiffCsv(String expect, String result, String batch, String data, int excludeTargetCol,
+			String excludeTargetValue, boolean showDetail) {
+		this();
+		this.expect = expect;
+		this.result = result;
+		this.batch = batch;
+		this.data = data;
+		this.excludeTargetCol = excludeTargetCol;
+		this.excludeTargetValue = excludeTargetValue;
+		this.showDetail = showDetail;
+		this.showSurplus = false;
+	}
+
 	public int getUnMatchCount() {
 		return unMatchCount;
 	}
@@ -646,20 +608,23 @@ public class DiffCsv {
 		return resDupCount;
 	}
 
-	public class DataMap{
-		private HashMap<String, DataAttr> map = new HashMap<String,DataAttr>();
+	public class DataMap {
+		private HashMap<String, DataAttr> map = new HashMap<String, DataAttr>();
+
 		public DataAttr get(String key) {
-			if(!map.containsKey(key)){
+			if (!map.containsKey(key)) {
 				logger.error("not found date = " + key);
 				logger.error("please select " + String.join(",", map.keySet()));
 				System.exit(1);
 			}
 			return map.get(key);
 		}
-		void put(String key,DataAttr attr) {
+
+		void put(String key, DataAttr attr) {
 			map.put(key, attr);
 		}
 	}
+
 	/**
 	 * BTSC_YUKO_KWH_L_EXT
 	 */
@@ -949,8 +914,7 @@ public class DiffCsv {
 	}
 
 	/**
-	 * BTSC_SHIJISU_CHK_RES
-	 * 現行PGのSQL結果不定によりカラム9は比較から除外。
+	 * BTSC_SHIJISU_CHK_RES 現行PGのSQL結果不定によりカラム9は比較から除外。
 	 */
 	private void initializeBtscShijisuChkRes() {
 		// キーカラム
