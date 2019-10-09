@@ -1,10 +1,20 @@
 package com.hoge;
 
+import java.util.Calendar;
+
 public class Main {
 
 	public static void main(String[] args) {
 		Main target = new Main();
-		System.out.println(target.getSQL());
+//		System.out.println(target.getSQL());
+		
+		Calendar cal = Calendar.getInstance();
+		System.out.println("today = " + cal.getTime().toString());
+		cal.add(Calendar.MONTH, 1);
+		System.out.println("+1 month = " + cal.getTime().toString());
+		cal = Calendar.getInstance();
+		cal.add(Calendar.MONTH, -1);
+		System.out.println("-1 month = " + cal.getTime().toString());
 	}
 	/**
 	 * E003がE009を呼ぶ条件のSQL

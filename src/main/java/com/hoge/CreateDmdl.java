@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.hoge;
 
@@ -37,8 +37,10 @@ public class CreateDmdl {
 	 */
 	public static void main(String[] args) {
 		CreateDmdl target = new CreateDmdl();
-//		String[] a = { "QV_HATSUDENSHA_KEIRYO_L" };
-//		args = a;
+		if (args.length < 1) {
+			String[] a = { "QV_HATSUDENSHA_KEIRYO_L" };
+			args = a;
+		}
 		target.exec(args[0]);
 
 	}
@@ -93,8 +95,8 @@ public class CreateDmdl {
 		for (String[] dat : colList) {
 			System.out.println( //
 					"\t\t\"" + dat[1] + "\"\n" + //
-					"\t\t@windgate.jdbc.column(name = \"" + dat[1] + "\")\n" + //
-					"\t\t" + dat[1].toLowerCase() + " : " + convType(dat[2]) + ";\n");
+							"\t\t@windgate.jdbc.column(name = \"" + dat[1] + "\")\n" + //
+							"\t\t" + dat[1].toLowerCase() + " : " + convType(dat[2]) + ";\n");
 		}
 		System.out.println("};");
 	}
